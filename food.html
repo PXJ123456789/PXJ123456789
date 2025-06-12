@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 食品生鲜</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FFA500;
+      --secondary-color: #90EE90;
+      --accent-color: #FFD700;
+      --dark-color: #2A2A2A;
+      --light-color: #F9F9F9;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --food-color: #FF6347;
+      --fresh-color: #00FF7F;
+      --category-bg: #FFF8E7;
+      --feature-bg: #F0FFF0;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+      overflow-x: hidden;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark-color);
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 5px;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background-color: #FF8C00;
+      border-color: #FF8C00;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* 食品生鲜英雄区 */
+    .food-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--light-color) 100%);
+      padding: 120px 0 80px;
+      margin-bottom: 60px;
+    }
+
+    .food-hero h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--dark-color);
+      margin-bottom: 20px;
+    }
+
+    .food-hero p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .hero-img-container {
+      position: relative;
+    }
+
+    .hero-img {
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .hero-img:hover {
+      transform: translateY(-5px);
+    }
+
+    .floating-badge {
+      position: absolute;
+      background-color: var(--food-color);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-badge-1 {
+      top: 10%;
+      right: -5%;
+    }
+
+    .floating-badge-2 {
+      bottom: 15%;
+      left: -10%;
+      background-color: var(--fresh-color);
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* 食品生鲜产品卡片 */
+    .product-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      background-color: white;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image-container img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .badge-hot {
+      background-color: var(--food-color);
+    }
+
+    .badge-new {
+      background-color: var(--primary-color);
+    }
+
+    .badge-sale {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      bottom: -8px;
+      left: 0;
+      background-color: var(--primary-color);
+    }
+
+    .footer ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+      color: white;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .footer ul li a:hover {
+      opacity: 1;
+    }
+
+    /* 渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 分类导航 */
+    .category-nav {
+      background-color: var(--category-bg);
+      padding: 20px 0;
+      margin-bottom: 60px;
+    }
+
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border-radius: 15px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .category-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .category-title {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* 特色推荐 */
+    .feature-section {
+      background-color: var(--feature-bg);
+      padding: 80px 0;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background-color: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-image {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover .feature-image img {
+      transform: scale(1.05);
+    }
+
+    .feature-content {
+      padding: 20px;
+    }
+
+    .feature-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 美食教程 */
+    .cooking-section {
+      padding: 80px 0;
+      margin-bottom: 60px;
+    }
+
+    .cooking-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .cooking-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .cooking-image {
+      height: 300px;
+      overflow: hidden;
+    }
+
+    .cooking-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .cooking-card:hover .cooking-image img {
+      transform: scale(1.05);
+    }
+
+    .cooking-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+      color: white;
+      padding: 20px;
+    }
+
+    .cooking-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .cooking-duration {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* 配送服务 */
+    .delivery-section {
+      padding: 80px 0;
+      background-color: var(--light-color);
+    }
+
+    .delivery-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .delivery-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .delivery-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 客户评价 */
+    .testimonial-section {
+      padding: 80px 0;
+      background-color: var(--category-bg);
+    }
+
+    .testimonial-card {
+      background-color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-content {
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+    }
+
+    .author-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 15px;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-name {
+      font-weight: bold;
+    }
+
+    .author-rating {
+      color: var(--accent-color);
+    }
+
+    /* 优惠券 */
+    .coupon-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--food-color) 100%);
+      color: white;
+    }
+
+    .coupon-card {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .coupon-value {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .coupon-code {
+      font-size: 20px;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .coupon-expiry {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    /* 限时促销 */
+    .promotion-section {
+      padding: 80px 0;
+    }
+
+    .promotion-timer {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .timer-box {
+      width: 80px;
+      height: 80px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+    }
+
+    .timer-value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .timer-label {
+      font-size: 12px;
+    }
+
+    /* 品牌合作 */
+    .brand-section {
+      padding: 80px 0;
+      background-color: var(--light-color);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .brand-logo:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .brand-logo img {
+      max-width: 80%;
+      max-height: 80%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 -->
+  <section class="food-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+          <h1 class="display-4 fw-bold mb-4">探索新鲜美味<br><span class="text-primary">精选食品生鲜</span></h1>
+          <p class="lead mb-6">从水果到肉类，从海鲜到零食，我们为您精选全球优质食品生鲜，让您享受健康美味。</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#" class="btn btn-primary btn-lg px-5">探索系列产品</a>
+            <a href="#" class="btn btn-outline-primary btn-lg px-5">查看美食指南</a>
+          </div>
+          <div class="mt-6">
+            <div class="d-flex align-items-center">
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">3000+</p>
+                <p class="text-muted small">食品单品</p>
+              </div>
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">150+</p>
+                <p class="text-muted small">优质供应商</p>
+              </div>
+              <div>
+                <p class="text-dark font-weight-bold mb-1">95%</p>
+                <p class="text-muted small">顾客好评</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+          <div class="hero-img-container">
+            <img src="images/shuiguishengxian.png" alt="食品生鲜展示" class="hero-img w-100 rounded-20 shadow-lg">
+            <div class="floating-badge floating-badge-1">
+              <p class="font-weight-bold mb-0">限时优惠</p>
+              <p class="text-sm mb-0">满299减30</p>
+            </div>
+            <div class="floating-badge floating-badge-2">
+              <p class="font-weight-bold mb-0">新鲜直达</p>
+              <p class="text-sm mb-0">当日送达</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 分类导航 -->
+  <section class="category-nav fade-in">
+    <div class="container">
+      <div class="text-center mb-6">
+        <h2 class="display-5 fw-bold">浏览食品分类</h2>
+        <p class="text-muted mt-3">找到您需要的新鲜食材</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-apple-alt"></i>
+            </div>
+            <div class="category-title">新鲜水果</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-carrot"></i>
+            </div>
+            <div class="category-title">新鲜蔬菜</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-drumstick-bite"></i>
+            </div>
+            <div class="category-title">肉类产品</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-fish"></i>
+            </div>
+            <div class="category-title">海鲜水产</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-cheese"></i>
+            </div>
+            <div class="category-title">乳制品</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-bread-slice"></i>
+            </div>
+            <div class="category-title">面包糕点</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-cookie"></i>
+            </div>
+            <div class="category-title">休闲零食</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-coffee"></i>
+            </div>
+            <div class="category-title">冲调饮品</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 特色推荐 -->
+  <section class="feature-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">特色推荐</h2>
+        <p class="text-muted mt-3">为您精选的优质产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/youjishucai.png" alt="有机蔬菜" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">有机蔬菜专区</h3>
+              <p class="feature-text">我们的有机蔬菜均来自合作农场，不使用农药和化肥，保证您的健康饮食。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/jinkoushuiguo.png" alt="进口水果" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">进口水果专区</h3>
+              <p class="feature-text">从世界各地精选的优质水果，新鲜直达您的餐桌，满足您的味蕾享受。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/jinkouhaixian.png" alt="冷冻海鲜" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">冷冻海鲜专区</h3>
+              <p class="feature-text">采用先进的冷冻技术，保持海鲜的新鲜口感和营养价值，让您随时享受大海的馈赠。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/lingshi.png" alt="健康零食" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">健康零食专区</h3>
+              <p class="feature-text">精选低卡、低糖、低盐的健康零食，满足您的口腹之欲，同时保持健康生活方式。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 精选产品区 -->
+  <section class="product-section py-10 fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">精选食品生鲜好物</h2>
+        <p class="text-muted mt-3">为您的生活增添美味</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- 产品1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/hongfushipingguo.png" alt="苹果" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">红富士苹果</h5>
+              <p class="product-category">水果</p>
+              <div class="product-price d-flex align-items-center">¥59
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/xilengniupai.png" alt="牛排" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">西冷牛排</h5>
+              <p class="product-category">肉类</p>
+              <div class="product-price d-flex align-items-center">¥199
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/sanwenyu.png" alt="三文鱼" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">挪威三文鱼</h5>
+              <p class="product-category">海鲜</p>
+              <div class="product-price d-flex align-items-center">¥299
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/chelizi.png" alt="车厘子" class="product-image">
+
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">智利车厘子</h5>
+              <p class="product-category">水果</p>
+              <div class="product-price d-flex align-items-center">¥89
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/bocai.png" alt="有机菠菜" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">有机菠菜</h5>
+              <p class="product-category">蔬菜</p>
+             <div class="product-price d-flex align-items-center">¥12
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/longxia.png" alt="澳洲龙虾" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">澳洲龙虾</h5>
+              <p class="product-category">海鲜</p>
+              <div class="product-price d-flex align-items-center">¥399
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary px-8 py-3 rounded-full">
+          查看更多产品 <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 美食教程 -->
+  <section class="cooking-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">美食教程</h2>
+        <p class="text-muted mt-3">跟着我们的厨师学习制作美味佳肴</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="cooking-card">
+            <div class="cooking-image">
+              <img src="images/jianniupai.png" alt="牛排教程" class="w-100 h-100 object-cover">
+            </div>
+            <div class="cooking-overlay">
+              <h3 class="cooking-title">完美牛排的煎制方法</h3>
+              <p class="cooking-duration">15分钟 · 中级难度</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="cooking-card">
+            <div class="cooking-image">
+              <img src="images/shucaishala.png" alt="沙拉教程" class="w-100 h-100 object-cover">
+            </div>
+            <div class="cooking-overlay">
+              <h3 class="cooking-title">健康蔬菜沙拉制作</h3>
+              <p class="cooking-duration">10分钟 · 初级难度</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="cooking-card">
+            <div class="cooking-image">
+              <img src="images/shousijiaocheng.png" alt="寿司教程" class="w-100 h-100 object-cover">
+            </div>
+            <div class="cooking-overlay">
+              <h3 class="cooking-title">家庭寿司制作指南</h3>
+              <p class="cooking-duration">30分钟 · 中级难度</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 配送服务 -->
+  <section class="delivery-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">优质配送服务</h2>
+        <p class="text-muted mt-3">新鲜直达您的餐桌</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="delivery-item">
+            <div class="delivery-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="delivery-title">当日送达</h3>
+            <p class="delivery-text">上午11点前下单，当天送达</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="delivery-item">
+            <div class="delivery-icon">
+              <i class="fas fa-thermometer-half"></i>
+            </div>
+            <h3 class="delivery-title">冷链配送</h3>
+            <p class="delivery-text">全程冷链，保证生鲜品质</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="delivery-item">
+            <div class="delivery-icon">
+              <i class="fas fa-box-open"></i>
+            </div>
+            <h3 class="delivery-title">新鲜保证</h3>
+            <p class="delivery-text">不满意可退换，新鲜有保障</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="delivery-item">
+            <div class="delivery-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3 class="delivery-title">覆盖全城</h3>
+            <p class="delivery-text">全城配送，无死角覆盖</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 客户评价 -->
+  <section class="testimonial-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">客户评价</h2>
+        <p class="text-muted mt-3">看看其他顾客的真实评价</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>"水果非常新鲜，口感很好，尤其是车厘子，个头大而且很甜。配送也很及时，下次还会继续购买。"</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <img src="images/touxiang10.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">张女士</div>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>"三文鱼的品质非常好，很新鲜，肉质鲜嫩，口感爽滑。客服态度也很好，有问题及时解决。"</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <img src="images/touxiang11.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">李先生</div>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>"牛排的质量超出预期，肉质鲜嫩多汁，煎制后口感非常好。包装也很精美，适合送礼。"</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <img src="images/touxiang12.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">王先生</div>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              <p>"蔬菜很新鲜，没有农药残留的味道，吃起来很放心。配送速度也很快，服务态度很好。"</p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <img src="images/touxiang13.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">陈女士</div>
+                <div class="author-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 优惠券 -->
+  <section class="coupon-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">领取优惠券</h2>
+        <p class="text-white-50 mt-3">立即领取，享受更多优惠</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥50</div>
+            <div class="coupon-code">FOOD50</div>
+            <div class="coupon-expiry">有效期至：2023年12月31日</div>
+            <a href="#" class="btn btn-light text-primary">立即领取</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥30</div>
+            <div class="coupon-code">FOOD30</div>
+            <div class="coupon-expiry">有效期至：2023年12月31日</div>
+            <a href="#" class="btn btn-light text-primary">立即领取</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥20</div>
+            <div class="coupon-code">FOOD20</div>
+            <div class="coupon-expiry">有效期至：2023年12月31日</div>
+            <a href="#" class="btn btn-light text-primary">立即领取</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 限时促销 -->
+  <section class="promotion-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">限时促销</h2>
+        <p class="text-muted mt-3">倒计时进行中，不要错过</p>
+      </div>
+      <div class="promotion-timer">
+        <div class="timer-box">
+          <div class="timer-value">12</div>
+          <div class="timer-label">小时</div>
+        </div>
+        <div class="timer-box">
+          <div class="timer-value">45</div>
+          <div class="timer-label">分钟</div>
+        </div>
+        <div class="timer-box">
+          <div class="timer-value">30</div>
+          <div class="timer-label">秒</div>
+        </div>
+      </div>
+      <div class="row g-4 mt-6">
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/shuiguolihe.png" alt="特价水果" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">特价水果礼盒</h5>
+              <p class="product-category">水果</p>
+              <div class="product-price d-flex align-items-center">¥69
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/haixiantaocan.png" alt="海鲜套餐" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">海鲜套餐</h5>
+              <p class="product-category">海鲜</p>
+             <div class="product-price d-flex align-items-center">¥199
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/niupaitaocan.png" alt="牛排套餐" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">牛排套餐</h5>
+              <p class="product-category">肉类</p>
+              <div class="product-price d-flex align-items-center">¥269
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/shucailihe.png" alt="蔬菜礼盒" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">有机蔬菜礼盒</h5>
+              <p class="product-category">蔬菜</p>
+              <div class="product-price d-flex align-items-center">¥89
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 品牌合作 -->
+  <section class="brand-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">品牌合作</h2>
+        <p class="text-muted mt-3">与优质品牌合作，提供优质产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai1.png" alt="品牌1">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai2.png" alt="品牌2">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai3.png" alt="品牌3">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai4.png" alt="品牌4">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai5.png" alt="品牌5">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="brand-logo">
+            <img src="images/pingpai6.png" alt="品牌6">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function () {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+  
+    // 渐入动画
+    function checkFadeIn() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (elementPosition < windowHeight - 100) {
+          element.classList.add('appear');
+        }
+      });
+    }
+
+    // 初始检查
+    checkFadeIn();
+
+    // 滚动时检查
+    window.addEventListener('scroll', checkFadeIn);
+
+    // 风格分类点击事件
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除所有活跃状态
+        categoryItems.forEach(i => i.classList.remove('active'));
+        // 添加当前活跃状态
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>

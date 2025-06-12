@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 母婴儿童</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FFA500;
+      --secondary-color: #FFB6C1;
+      --accent-color: #FFD700;
+      --dark-color: #2A2A2A;
+      --light-color: #F9F9F9;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --baby-color: #FF69B4;
+      --kids-color: #1E90FF;
+      --category-bg: #FFF0F5;
+      --feature-bg: #E6E6FA;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+      overflow-x: hidden;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark-color);
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 5px;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background-color: #FF8C00;
+      border-color: #FF8C00;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* 母婴儿童英雄区 */
+    .baby-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--light-color) 100%);
+      padding: 120px 0 80px;
+      margin-bottom: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .baby-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/225/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .baby-hero h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--dark-color);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .baby-hero p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img {
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .hero-img:hover {
+      transform: translateY(-5px);
+    }
+
+    .floating-badge {
+      position: absolute;
+      background-color: var(--baby-color);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-badge-1 {
+      top: 10%;
+      right: -5%;
+    }
+
+    .floating-badge-2 {
+      bottom: 15%;
+      left: -10%;
+      background-color: var(--kids-color);
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* 母婴儿童产品卡片 */
+    .product-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      background-color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image-container img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .badge-hot {
+      background-color: var(--baby-color);
+    }
+
+    .badge-new {
+      background-color: var(--primary-color);
+    }
+
+    .badge-sale {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      bottom: -8px;
+      left: 0;
+      background-color: var(--primary-color);
+    }
+
+    .footer ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+      color: white;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .footer ul li a:hover {
+      opacity: 1;
+    }
+
+    /* 渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 分类导航 */
+    .category-nav {
+      background-color: var(--category-bg);
+      padding: 20px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .category-nav::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/226/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border-radius: 15px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      cursor: pointer;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .category-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .category-title {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* 特色推荐 */
+    .feature-section {
+      background-color: var(--feature-bg);
+      padding: 80px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .feature-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/227/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .feature-card {
+      background-color: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-image {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover .feature-image img {
+      transform: scale(1.05);
+    }
+
+    .feature-content {
+      padding: 20px;
+    }
+
+    .feature-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 育儿知识 */
+    .parenting-section {
+      padding: 80px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .parenting-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/228/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .parenting-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      z-index: 1;
+    }
+
+    .parenting-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .parenting-image {
+      height: 300px;
+      overflow: hidden;
+    }
+
+    .parenting-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .parenting-card:hover .parenting-image img {
+      transform: scale(1.05);
+    }
+
+    .parenting-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+      color: white;
+      padding: 20px;
+    }
+
+    .parenting-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .parenting-author {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* 服务保障 */
+    .service-section {
+      padding: 80px 0;
+      background-color: var(--light-color);
+      position: relative;
+    }
+    
+    .service-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/229/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .service-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .service-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 妈妈社区 */
+    .community-section {
+      padding: 80px 0;
+      background-color: var(--category-bg);
+      position: relative;
+    }
+    
+    .community-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/230/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .community-card {
+      background-color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .community-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .community-content {
+      margin-bottom: 20px;
+    }
+
+    .community-author {
+      display: flex;
+      align-items: center;
+    }
+
+    .author-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 15px;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-name {
+      font-weight: bold;
+    }
+
+    .author-date {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    /* 优惠券 */
+    .coupon-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, var(--baby-color) 0%, var(--kids-color) 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .coupon-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/231/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .coupon-card {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .coupon-value {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .coupon-code {
+      font-size: 20px;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .coupon-expiry {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    /* 品牌合作 */
+    .brand-section {
+      padding: 80px 0;
+      background-color: var(--light-color);
+      position: relative;
+    }
+    
+    .brand-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/232/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      opacity: 0.7;
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-logo:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .brand-logo img {
+      max-width: 80%;
+      max-height: 80%;
+    }
+    
+    /* 母婴特色元素 */
+    .baby-cloud {
+      position: absolute;
+      width: 100px;
+      height: 60px;
+
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 30px;
+      opacity: 0;
+      animation: float-cloud 15s linear infinite;
+    }
+    
+    .baby-cloud::before, .baby-cloud::after {
+      content: '';
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+    }
+    
+    .baby-cloud::before {
+      width: 40px;
+      height: 40px;
+      top: -20px;
+      left: 15px;
+    }
+    
+    .baby-cloud::after {
+      width: 50px;
+      height: 50px;
+      top: -25px;
+      right: 15px;
+    }
+    
+    @keyframes float-cloud {
+      0% {
+        transform: translateX(-100px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateX(calc(100vw + 100px));
+        opacity: 0;
+      }
+    }
+    
+    /* 移动设备适配 */
+    @media (max-width: 768px) {
+      .baby-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .baby-hero p {
+        font-size: 1rem;
+      }
+      
+      .floating-badge {
+        display: none;
+      }
+      
+      .category-item {
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 -->
+  <section class="baby-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+          <h1 class="display-4 fw-bold mb-4">呵护宝宝成长<br><span class="text-primary">精选母婴好物</span></h1>
+          <p class="lead mb-6">从婴儿用品到儿童玩具，从孕妇装到奶粉辅食，我们为您提供全方位的母婴儿童产品，让宝宝健康快乐成长。</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#seriers-item-a" class="btn btn-primary btn-lg px-5">探索系列产品</a>
+            <a href="#zhinan" class="btn btn-outline-primary btn-lg px-5">查看育儿指南</a>
+          </div>
+          <div class="mt-6">
+            <div class="d-flex align-items-center">
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">5000+</p>
+                <p class="text-muted small">母婴单品</p>
+              </div>
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">200+</p>
+                <p class="text-muted small">优质供应商</p>
+              </div>
+              <div>
+                <p class="text-dark font-weight-bold mb-1">98%</p>
+                <p class="text-muted small">顾客好评</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+          <div class="hero-img-container">
+            <img src="images/muying.png" alt="母婴儿童展示" class="hero-img w-100 rounded-20 shadow-lg">
+            <div class="floating-badge floating-badge-1">
+              <p class="font-weight-bold mb-0">限时优惠</p>
+              <p class="text-sm mb-0">满399减50</p>
+            </div>
+            <div class="floating-badge floating-badge-2">
+              <p class="font-weight-bold mb-0">安全保障</p>
+              <p class="text-sm mb-0">品质认证</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 母婴特色装饰元素 -->
+    <div class="baby-cloud" style="top: 20%; animation-delay: 0s;"></div>
+    <div class="baby-cloud" style="top: 40%; animation-delay: 3s;"></div>
+    <div class="baby-cloud" style="top: 60%; animation-delay: 6s;"></div>
+  </section>
+
+  <!-- 分类导航 -->
+  <section class="category-nav fade-in">
+    <div class="container">
+      <div class="text-center mb-6">
+        <h2 class="display-5 fw-bold">浏览母婴分类</h2>
+        <p class="text-muted mt-3">找到您需要的母婴产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-baby"></i>
+            </div>
+            <div class="category-title">婴儿用品</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="category-title">婴儿服装</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <div class="category-title">婴儿食品</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-stroller"></i>
+            </div>
+            <div class="category-title">婴儿车椅</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-bed"></i>
+            </div>
+            <div class="category-title">婴儿寝具</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="category-title">儿童玩具</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="category-title">儿童图书</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="category-title">孕妇用品</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 特色推荐 -->
+  <section class="feature-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">特色推荐</h2>
+        <p class="text-muted mt-3">为您精选的优质产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yingershipin.png" alt="有机婴儿食品" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">婴儿食品专区</h3>
+              <p class="feature-text">我们的婴儿食品均采用天然原料，不添加人工色素、香料和防腐剂，为宝宝提供最纯净的营养。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yingeryongpin.png" alt="安全婴儿用品" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">安全婴儿用品专区</h3>
+              <p class="feature-text">所有婴儿用品均经过严格的安全检测，符合国际安全标准，让您的宝宝使用更放心。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yizhiwanju.png" alt="益智玩具" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">益智玩具专区</h3>
+              <p class="feature-text">精选适合不同年龄段宝宝的益智玩具，帮助宝宝开发智力，促进身体和大脑的全面发展。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yunfuzhuang.png" alt="孕妇装" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">孕妇装专区</h3>
+              <p class="feature-text">专为孕妇设计的舒适服装，采用柔软透气的面料，让您在孕期依然保持美丽自信。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 精选产品区 -->
+  <section class="product-section py-10 fade-in">
+    <div id="seriers-item-a" class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">精选母婴儿童好物</h2>
+        <p class="text-muted mt-3">为宝宝的健康成长保驾护航</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- 产品1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/naifen.png" alt="婴儿奶粉" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">有机婴儿奶粉</h5>
+              <p class="product-category">婴儿食品</p>
+              <div class="product-price d-flex align-items-center">¥299
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/yingertuiche.png" alt="婴儿车" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">轻便婴儿推车</h5>
+              <p class="product-category">婴儿车椅</p>
+              <div class="product-price d-flex align-items-center">¥1299
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/yingerchuang.png" alt="婴儿床" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">实木婴儿床</h5>
+              <p class="product-category">婴儿寝具</p>
+              <div class="product-price d-flex align-items-center">¥1899
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/zhiniaoku.png" alt="婴儿纸尿裤" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">超薄透气纸尿裤</h5>
+              <p class="product-category">婴儿用品</p>
+              <div class="product-price d-flex align-items-center">¥129
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/liantiyi.png" alt="婴儿衣服" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">有机棉婴儿连体衣</h5>
+              <p class="product-category">婴儿服装</p>
+              <div class="product-price d-flex align-items-center">¥169
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/zaojiaoyizhiwanju.png" alt="益智玩具" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">早教益智玩具套装</h5>
+              <p class="product-category">儿童玩具</p>
+              <div class="product-price d-flex align-items-center">¥259
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary px-8 py-3 rounded-full">
+          查看更多产品 <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 育儿知识 -->
+  <section class="parenting-section fade-in">
+    <div id= "zhinan" class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">育儿知识</h2>
+        <p class="text-muted mt-3">科学育儿，从这里开始</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="parenting-card">
+            <div class="parenting-image">
+              <img src="https://picsum.photos/id/38/600/800" alt="婴儿护理" class="w-100 h-100 object-cover">
+            </div>
+            <div class="parenting-overlay">
+              <h3 class="parenting-title">新生儿护理全攻略</h3>
+              <p class="parenting-author">李医生 · 育儿专家</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="parenting-card">
+            <div class="parenting-image">
+              <img src="https://picsum.photos/id/39/600/800" alt="婴儿喂养" class="w-100 h-100 object-cover">
+            </div>
+            <div class="parenting-overlay">
+              <h3 class="parenting-title">婴儿喂养的科学方法</h3>
+              <p class="parenting-author">王营养师 · 营养专家</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="parenting-card">
+            <div class="parenting-image">
+              <img src="https://picsum.photos/id/40/600/800" alt="早期教育" class="w-100 h-100 object-cover">
+            </div>
+            <div class="parenting-overlay">
+              <h3 class="parenting-title">宝宝早期教育的重要性</h3>
+              <p class="parenting-author">张教授 · 教育专家</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 服务保障 -->
+  <section class="service-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">服务保障</h2>
+        <p class="text-muted mt-3">让您购物无忧</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="service-title">正品保障</h3>
+            <p class="service-text">所有产品均为正品，假一赔十</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="service-title">次日送达</h3>
+            <p class="service-text">上午11点前下单，次日送达</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+            <h3 class="service-title">七天无理由退换</h3>
+            <p class="service-text">不满意可退换，无需理由</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="fas fa-headphones-alt"></i>
+            </div>
+            <h3 class="service-title">专业客服</h3>
+            <p class="service-text">7×24小时专业客服，随时为您服务</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 妈妈社区 -->
+  <section class="community-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">妈妈社区</h2>
+        <p class="text-muted mt-3">分享育儿经验，交流育儿心得</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="community-card">
+            <div class="community-content">
+              <p>"宝宝三个月了，一直吃这款奶粉，消化很好，也不上火，长得白白胖胖的，真的很不错！"</p>
+            </div>
+            <div class="community-author">
+              <div class="author-avatar">
+                <img src="images/touxiang14.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">刘妈妈</div>
+                <div class="author-date">2023年5月15日</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="community-card">
+            <div class="community-content">
+              <p>"这款婴儿车真的很轻便，折叠起来也很小，出门携带非常方便。宝宝坐在里面也很舒服，很满意这次购物！"</p>
+            </div>
+            <div class="community-author">
+              <div class="author-avatar">
+                <img src="images/touxiang15.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">张妈妈</div>
+                <div class="author-date">2023年5月10日</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="community-card">
+            <div class="community-content">
+              <p>"宝宝很喜欢这套益智玩具，每天都要玩很久。玩具质量很好，没有异味，颜色也很鲜艳，很适合宝宝玩。"</p>
+            </div>
+            <div class="community-author">
+              <div class="author-avatar">
+                <img src="images/touxiang16.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">王妈妈</div>
+                <div class="author-date">2023年5月5日</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="community-card">
+            <div class="community-content">
+              <p>"这件婴儿连体衣的面料很柔软，穿着很舒服，也很亲肤。洗了几次也没有变形，非常满意！"</p>
+            </div>
+            <div class="community-author">
+              <div class="author-avatar">
+                <img src="images/touxiang17.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="author-name">陈妈妈</div>
+                <div class="author-date">2023年5月1日</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 优惠券 -->
+  <section class="coupon-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">超值优惠券</h2>
+        <p class="text-muted mt-3">领取优惠券，享受更多优惠</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥50</div>
+         <div class="coupon-code">MOM50</div>
+            <div class="coupon-expiry">有效期至：2023-06-30</div>
+            <a href="#" class="btn btn-outline-warning">立即领取</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥80</div>
+            <div class="coupon-code">MOM80</div>
+            <div class="coupon-expiry">有效期至：2023-06-30</div>
+            <a href="#" class="btn btn-outline-warning">立即领取</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="coupon-card">
+            <div class="coupon-value">¥100</div>
+            <div class="coupon-code">MOM100</div>
+            <div class="coupon-expiry">有效期至：2023-06-30</div>
+            <a href="#" class="btn btn-outline-warning">立即领取</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 品牌合作 -->
+  <section class="brand-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">合作品牌</h2>
+        <p class="text-muted mt-3">与全球知名母婴品牌合作</p>
+      </div>
+      <div class="row justify-content-center g-4">
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying1.png" alt="品牌Logo">
+          </div>
+        </div>
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying2.png" alt="品牌Logo">
+          </div>
+        </div>
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying3.png" alt="品牌Logo">
+          </div>
+        </div>
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying4.png" alt="品牌Logo">
+          </div>
+        </div>
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying5.png" alt="品牌Logo">
+          </div>
+        </div>
+        <div class="col-md-2 col-4">
+          <div class="brand-logo">
+            <img src="images/muying6.png" alt="品牌Logo">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+	  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function () {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+  
+    // 渐入动画
+    function checkFadeIn() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (elementPosition < windowHeight - 100) {
+          element.classList.add('appear');
+        }
+      });
+    }
+
+    // 初始检查
+    checkFadeIn();
+
+    // 滚动时检查
+    window.addEventListener('scroll', checkFadeIn);
+
+    // 风格分类点击事件
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除所有活跃状态
+        categoryItems.forEach(i => i.classList.remove('active'));
+        // 添加当前活跃状态
+        this.classList.add('active');
+      });
+    });
+	  
+	  	   // 添加平滑滚动效果
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          // 考虑到固定导航栏的高度，需要稍微调整滚动位置
+          const navbarHeight = document.querySelector('.navbar').offsetHeight;
+          const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+	  
+  </script>
+</body>
+
+</html>		

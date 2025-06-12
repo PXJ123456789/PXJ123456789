@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 服装鞋帽</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- 自定义样式 -->
+  <style>
+    :root {
+      --primary-color: #9D65C9;      /* 柔和紫色 - 主色调 */
+      --secondary-color: #FFB6C1;    /* 浅粉色 - 辅助色 */
+      --accent-color: #98FB98;       /* 薄荷绿 - 强调色 */
+      --dark-color: #2A2A2A;         /* 深灰色 - 文字和背景 */
+      --light-color: #F9F9F9;        /* 浅灰色 - 背景 */
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+      overflow-x: hidden;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark-color);
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 5px;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background-color: #8B52B7;
+      border-color: #8B52B7;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* 筛选侧边栏 */
+    .filter-sidebar {
+      position: sticky;
+      top: 100px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group {
+      margin-bottom: 25px;
+    }
+
+    .filter-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .filter-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-item:hover {
+      color: var(--primary-color);
+    }
+
+    .filter-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      margin-right: 10px;
+      transition: var(--transition);
+    }
+
+    .filter-item.active .filter-checkbox {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      position: relative;
+    }
+
+    .filter-item.active .filter-checkbox::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* 产品卡片 */
+    .product-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 120%;
+    }
+
+    .product-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image {
+      transform: scale(1.08);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
+
+    .badge-new {
+      background-color: var(--primary-color);
+    }
+
+    .badge-hot {
+      background-color: var(--secondary-color);
+    }
+
+    .badge-sale {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .product-actions {
+      position: absolute;
+      bottom: -40px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      transition: var(--transition);
+      opacity: 0;
+    }
+
+    .product-card:hover .product-actions {
+      bottom: 0;
+      opacity: 1;
+    }
+
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      color: var(--dark-color);
+    }
+
+    .action-btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    /* 时尚趋势区域 */
+    .trend-section {
+      background-color: rgba(157, 101, 201, 0.05);
+      padding: 80px 0;
+      margin-top: 80px;
+    }
+
+    .trend-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      background-color: white;
+    }
+
+    .trend-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .trend-image {
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .trend-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .trend-card:hover .trend-image img {
+      transform: scale(1.05);
+    }
+
+    .trend-content {
+      padding: 20px;
+    }
+
+    .trend-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .trend-date {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    /* 品牌故事 */
+    .brand-story {
+      padding: 80px 0;
+      background-image: url('https://picsum.photos/id/1082/1920/800');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .brand-story::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(157, 101, 201, 0.7);
+    }
+
+    .story-content {
+      position: relative;
+      z-index: 1;
+      color: white;
+    }
+
+    .story-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .story-text {
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .footer-link {
+      display: block;
+      margin-bottom: 10px;
+      color: #aaa;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .social-icon {
+      display: inline-flex;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      transition: var(--transition);
+    }
+
+    .social-icon:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-5px);
+    }
+
+    .newsletter-input {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px 0 0 5px;
+      width: 70%;
+    }
+
+    .newsletter-input::placeholder {
+      color: #aaa;
+    }
+
+    .newsletter-btn {
+      background-color: var(--primary-color);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 0 5px 5px 0;
+      transition: var(--transition);
+    }
+
+    .newsletter-btn:hover {
+      background-color: #8B52B7;
+    }
+
+    /* 滚动动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition);
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8B52B7;
+    }
+
+    /* 产品筛选和排序 */
+    .filter-sort {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .sort-select {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 8px 15px;
+      background-color: white;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .sort-select:hover {
+      border-color: var(--primary-color);
+    }
+
+    .sort-icon {
+      margin-left: 10px;
+      color: var(--primary-color);
+    }
+
+    .view-toggle {
+      display: flex;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .view-btn {
+      padding: 8px 15px;
+      background-color: white;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .view-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* 响应式布局 */
+    @media (max-width: 991px) {
+      .filter-sidebar {
+        position: static;
+        margin-bottom: 30px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .product-card {
+        margin-bottom: 20px;
+      }
+      
+      .story-title {
+        font-size: 2rem;
+      }
+      
+      .footer {
+        text-align: center;
+      }
+      
+      .footer-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .social-icons {
+        justify-content: center;
+      }
+      
+      .newsletter-input {
+        width: 60%;
+      }
+    }
+  </style>
+</head>
+<body>
+   <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html#">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  
+  <!-- 英雄区域 -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+        <h1 class="display-4 fw-bold mb-4">2023 夏季新品 <span class="text-primary">焕新上市</span></h1>
+        <p class="lead mb-6">探索最新时尚趋势，找到属于你的独特风格。全场新品低至7折，更有满299元免运费优惠。</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#new-arrivals" class="btn btn-primary btn-lg px-5">立即选购</a>
+          <a href="#fashion-trends" class="btn btn-outline-primary btn-lg px-5">探索趋势</a>
+        </div>
+        <div class="mt-6">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <p class="text-dark font-weight-bold mb-1">20000+</p>
+              <p class="text-muted small">服装单品</p>
+            </div>
+            <div class="me-4">
+              <p class="text-dark font-weight-bold mb-1">300+</p>
+              <p class="text-muted small">时尚品牌</p>
+            </div>
+            <div>
+              <p class="text-dark font-weight-bold mb-1">99%</p>
+              <p class="text-muted small">顾客好评率</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+        <div class="position-relative">
+          <img src="images/fzxm.png" alt="夏季服装展示" class="w-100 rounded-20 shadow-lg">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 装饰元素 -->
+  <div class="position-relative">
+    <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden">
+      <svg class="position-absolute top-0 start-0" width="100%" height="100%" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="gradient-clothing" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F8E8F9" />
+            <stop offset="100%" stop-color="#E8F0FD" />
+          </linearGradient>
+        </defs>
+        <polygon points="0,0 0,70% 100%,100% 100%,0" fill="url(#gradient-clothing)" />
+      </svg>
+    </div>
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+      <div class="d-flex flex-wrap justify-content-between align-items-center h-100 p-4">
+        <div class="d-flex flex-column gap-3">
+          <div class="w-10 h-10 bg-primary rounded-50 opacity-10"></div>
+          <div class="w-8 h-8 bg-secondary rounded-50 opacity-10"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- 分类导航 -->
+  <section class="category-section py-10 bg-white">
+    <div class="container">
+      <div class="row justify-content-center fade-in">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-center flex-wrap gap-4 mb-8">
+            <a href="#" class="btn btn-primary rounded-pill px-5 py-2">全部商品</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">女装</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">男装</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">鞋履</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">配饰</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">童装</a>
+            <a href="#" class="btn btn-outline-primary rounded-pill px-5 py-2 hover:bg-primary hover:text-white transition">运动</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主内容区 -->
+  <section class="main-content py-10">
+    <div class="container">
+      <div class="row">
+        <!-- 筛选侧边栏 -->
+        <div class="col-lg-3 mb-8 mb-lg-0">
+          <div class="filter-sidebar">
+            <div class="filter-group">
+              <h4 class="filter-title">价格区间</h4>
+              <div class="d-flex gap-2 mb-3">
+                <input type="number" class="form-control" placeholder="最低">
+                <span>-</span>
+                <input type="number" class="form-control" placeholder="最高">
+              </div>
+              <button class="btn btn-primary btn-sm w-100">应用</button>
+            </div>
+            
+            <div class="filter-group">
+              <h4 class="filter-title">品牌</h4>
+              <div class="filter-item active">
+                <div class="filter-checkbox"></div>
+                <span>全部品牌</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>ZARA</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>H&M</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>优衣库</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>耐克</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>阿迪达斯</span>
+              </div>
+            </div>
+            
+            <div class="filter-group">
+              <h4 class="filter-title">颜色</h4>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="color-option w-8 h-8 rounded-full bg-black cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-white border cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-red-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-blue-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-green-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-yellow-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-purple-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-pink-500 cursor-pointer hover:scale-110 transition"></div>
+                <div class="color-option w-8 h-8 rounded-full bg-gray-500 cursor-pointer hover:scale-110 transition"></div>
+              </div>
+            </div>
+            
+            <div class="filter-group">
+              <h4 class="filter-title">尺码</h4>
+              <div class="d-flex flex-wrap gap-2">
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">XS</div>
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">S</div>
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">M</div>
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">L</div>
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">XL</div>
+                <div class="size-option px-3 py-1 border rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition">XXL</div>
+              </div>
+            </div>
+            
+            <div class="filter-group">
+              <h4 class="filter-title">促销活动</h4>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>新品上市</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>热销商品</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>限时折扣</span>
+              </div>
+              <div class="filter-item">
+                <div class="filter-checkbox"></div>
+                <span>买一送一</span>
+              </div>
+            </div>
+            
+            <button class="btn btn-outline-primary w-100 mt-4">重置筛选</button>
+          </div>
+        </div>
+        
+        <!-- 产品展示区 -->
+      <div class="col-md-9">
+        <!-- 排序和视图控制 -->
+        <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+          <div class="sort-options">
+            <label for="sort-select" class="me-2">&nbsp;</label>
+            <select class="form-select" id="sort-select">
+              <option value="popular">人气优先</option>
+              <option value="newest">最新上架</option>
+              <option value="price-low">价格从低到高</option>
+              <option value="price-high">价格从高到低</option>
+            </select>
+            </div>
+            <div class="view-toggle">
+				
+              <div class="view-btn active" data-view="grid">
+                <i class="fas fa-th-large"></i>
+              </div>
+</div>
+          </div>
+          
+          <!-- 产品网格 -->
+          <div class="row g-4">
+            <!-- 产品1 -->
+            <div class="col-md-6 col-lg-4 fade-in">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/64/600/800" alt="夏季连衣裙" class="product-image">
+                  <span class="product-badge badge-new">新品</span>
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">夏季碎花连衣裙</h5>
+                  <p class="product-category">女装 / 连衣裙</p>
+                  <div class="product-price">¥299</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 产品2 -->
+            <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.1s;">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/91/600/800" alt="休闲运动鞋" class="product-image">
+                  <span class="product-badge badge-hot">热销</span>
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">透气网面运动鞋</h5>
+                  <p class="product-category">鞋履 / 运动鞋</p>
+                  <div class="product-price">¥399</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 产品3 -->
+            <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.2s;">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/26/600/800" alt="男士休闲裤" class="product-image">
+                  <span class="product-badge badge-sale">折扣</span>
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">弹力休闲直筒裤</h5>
+                  <p class="product-category">男装 / 休闲裤</p>
+                  <div class="product-price">¥199</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 产品4 -->
+            <div class="col-md-6 col-lg-4 fade-in">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/225/600/800" alt="女士凉鞋" class="product-image">
+                  <span class="product-badge badge-new">新品</span>
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">细带高跟凉鞋</h5>
+                  <p class="product-category">鞋履 / 凉鞋</p>
+                  <div class="product-price">¥259</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 产品5 -->
+            <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.1s;">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/1005/600/800" alt="男士T恤" class="product-image">
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">纯棉印花短袖T恤</h5>
+                  <p class="product-category">男装 / T恤</p>
+                  <div class="product-price">¥129</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 产品6 -->
+            <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.2s;">
+              <div class="product-card">
+                <div class="product-image-container">
+                  <img src="https://picsum.photos/id/1062/600/800" alt="女士手提包" class="product-image">
+                  <span class="product-badge badge-hot">热销</span>
+                  <div class="product-actions">
+                    <button class="action-btn">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="product-details">
+                  <h5 class="product-title">真皮迷你手提包</h5>
+                  <p class="product-category">配饰 / 包包</p>
+                  <div class="product-price">¥399</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 加载更多按钮 -->
+          <div class="text-center mt-4 fade-in">
+            <button class="btn btn-outline-primary px-8 py-3 rounded-full">
+              加载更多产品 <i class="fas fa-chevron-down ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 时尚趋势区域 -->
+  <section class="trend-section">
+    <div class="container">
+      <div class="text-center mb-10 fade-in">
+        <h2 class="display-5 fw-bold mb-4">2023 夏季时尚趋势</h2>
+        <p class="lead text-muted">了解最新时尚潮流，把握夏季穿搭灵感</p>
+      </div>
+      
+      <div class="row g-6">
+        <!-- 趋势1 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="trend-card">
+            <div class="trend-image">
+              <img src="https://picsum.photos/id/1076/600/400" alt="夏季色彩趋势">
+            </div>
+            <div class="trend-content">
+              <h3 class="trend-title">2023夏季色彩趋势：明亮与自然的融合</h3>
+              <p class="trend-date">2023年6月15日</p>
+              <p class="trend-text">今年夏季，柔和的淡紫色、明亮的薄荷绿以及温暖的珊瑚色成为了时尚舞台上的主角...</p>
+              <a href="#" class="text-primary font-weight-bold">阅读更多 <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 趋势2 -->
+        <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.1s;">
+          <div class="trend-card">
+            <div class="trend-image">
+              <img src="https://picsum.photos/id/1082/600/400" alt="极简主义">
+            </div>
+            <div class="trend-content">
+              <h3 class="trend-title">极简主义回归：2023夏季必备单品</h3>
+              <p class="trend-date">2023年6月10日</p>
+              <p class="trend-text">干净利落的线条、简约的设计以及单一色调的搭配，极简主义正在2023年夏季卷土重来...</p>
+              <a href="#" class="text-primary font-weight-bold">阅读更多 <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 趋势3 -->
+        <div class="col-md-6 col-lg-4 fade-in" style="transition-delay: 0.2s;">
+          <div class="trend-card">
+            <div class="trend-image">
+              <img src="https://picsum.photos/id/1077/600/400" alt="可持续时尚">
+            </div>
+            <div class="trend-content">
+              <h3 class="trend-title">可持续时尚：环保材料与设计的完美结合</h3>
+              <p class="trend-date">2023年6月5日</p>
+              <p class="trend-text">环保意识的提高使得可持续时尚成为了2023年夏季的重要趋势，越来越多的品牌开始采用环保材料...</p>
+              <a href="#" class="text-primary font-weight-bold">阅读更多 <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 品牌故事 -->
+  <section class="brand-story">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 fade-in">
+          <div class="story-content">
+            <h2 class="story-title">我们的品牌故事</h2>
+            <p class="story-text">
+              星选易购创立于2015年，是一家专注于提供高品质服装鞋帽的电商平台。我们致力于为消费者带来最新、最时尚的服装鞋帽产品，同时注重产品的品质和环保性。
+            </p>
+            <p class="story-text">
+              我们与全球超过500个知名品牌合作，涵盖了时尚、休闲、运动等多个领域，满足不同消费者的需求。每一件产品都经过严格的质量检测，确保消费者能够购买到满意的商品。
+            </p>
+            <a href="#" class="btn btn-light text-primary px-6 py-3 rounded-full">
+              了解更多 <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // 滚动渐入动画
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+      
+      // 返回顶部按钮显示/隐藏
+      const backToTopBtn = document.getElementById('backToTop');
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.remove('opacity-0', 'invisible');
+        backToTopBtn.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopBtn.classList.add('opacity-0', 'invisible');
+        backToTopBtn.classList.remove('opacity-100', 'visible');
+      }
+    });
+    
+    // 初始化滚动动画
+    window.dispatchEvent(new Event('scroll'));
+    
+
+    
+    // 筛选项点击效果
+    document.querySelectorAll('.filter-item').forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除其他所有选中状态
+        document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
+        // 添加当前选中状态
+        this.classList.add('active');
+      });
+    });
+    
+    // 视图切换
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // 移除其他所有选中状态
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        // 添加当前选中状态
+        this.classList.add('active');
+        
+        // 这里可以添加实际的视图切换逻辑
+        const viewType = this.getAttribute('data-view');
+        console.log('切换到视图:', viewType);
+      });
+    });
+    
+    // 尺码和颜色选择
+    document.querySelectorAll('.size-option, .color-option').forEach(option => {
+      option.addEventListener('click', function() {
+        this.classList.toggle('bg-primary');
+        this.classList.toggle('text-white');
+        this.classList.toggle('border-primary');
+      });
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

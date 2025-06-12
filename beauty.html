@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 美妆个护</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #9D65C9;
+      --secondary-color: #FFB6C1;
+      --accent-color: #98FB98;
+      --dark-color: #2A2A2A;
+      --light-color: #F9F9F9;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --beauty-color: #FF69B4;
+      --skincare-color: #FFC0CB;
+      --makeup-color: #FF1493;
+      --fragrance-color: #DA70D6;
+      --hair-color: #FF8C00;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+      overflow-x: hidden;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark-color);
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 5px;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background-color: #8B52B7;
+      border-color: #8B52B7;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* 美妆分类 */
+    .beauty-category {
+      background-color: white;
+      padding: 15px 0;
+      margin-bottom: 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .category-item {
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 8px;
+    }
+
+    .category-item:hover,
+    .category-item.active {
+      background-color: var(--secondary-color);
+    }
+
+    .category-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    /* 美妆英雄区 */
+    .beauty-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--light-color) 100%);
+      padding: 120px 0 80px;
+      margin-bottom: 60px;
+    }
+
+    .beauty-hero h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--dark-color);
+      margin-bottom: 20px;
+    }
+
+    .beauty-hero p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .hero-img-container {
+      position: relative;
+    }
+
+    .hero-img {
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .hero-img:hover {
+      transform: translateY(-5px);
+    }
+
+    .floating-badge {
+      position: absolute;
+      background-color: var(--beauty-color);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-badge-1 {
+      top: 10%;
+      right: -5%;
+    }
+
+    .floating-badge-2 {
+      bottom: 15%;
+      left: -10%;
+      background-color: var(--primary-color);
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* 美妆产品卡片 */
+    .product-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      background-color: white;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image-container img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .badge-hot {
+      background-color: var(--beauty-color);
+    }
+
+    .badge-new {
+      background-color: var(--primary-color);
+    }
+
+    .badge-sale {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    /* 美妆灵感 */
+    .beauty-inspiration {
+      background-color: #FFF0F5;
+      padding: 80px 0;
+      margin: 60px 0;
+    }
+
+    .inspiration-card {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      height: 350px;
+      transition: var(--transition);
+    }
+
+    .inspiration-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .inspiration-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .inspiration-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+      padding: 20px;
+      color: white;
+    }
+
+    /* 热门品牌 */
+    .popular-brands {
+      padding: 80px 0;
+    }
+
+    .brand-card {
+      text-align: center;
+      padding: 20px;
+      border-radius: 15px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .brand-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* 美妆评测 */
+    .beauty-reviews {
+      padding: 80px 0;
+      background-color: #F9F9F9;
+    }
+
+    .review-card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .review-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .review-author img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    /* 新品预览 */
+    .new-arrivals {
+      padding: 80px 0;
+    }
+
+    .new-arrival-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      height: 400px;
+    }
+
+    .new-arrival-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .new-arrival-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .new-arrival-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 20px;
+      transform: translateY(100%);
+      transition: var(--transition);
+    }
+
+    .new-arrival-card:hover .new-arrival-overlay {
+      transform: translateY(0);
+    }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      bottom: -8px;
+      left: 0;
+      background-color: var(--primary-color);
+    }
+
+    .footer ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+      color: white;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .footer ul li a:hover {
+      opacity: 1;
+    }
+
+    /* 渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 美妆标签 */
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tag-skincare {
+      background-color: var(--skincare-color);
+      color: var(--dark-color);
+    }
+
+    .tag-makeup {
+      background-color: var(--makeup-color);
+      color: white;
+    }
+
+    .tag-fragrance {
+      background-color: var(--fragrance-color);
+      color: white;
+    }
+
+    .tag-hair {
+      background-color: var(--hair-color);
+      color: white;
+    }
+
+    /* 价格标签 */
+    .price-tag {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      display: inline-block;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+ 
+
+  <!-- 英雄区域 -->
+  <section class="beauty-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+          <h1 class="display-4 fw-bold mb-4">发现你的美丽潜能<br><span class="text-primary">精选美妆个护产品</span></h1>
+          <p class="lead mb-6">从护肤到彩妆，从香水到美发，我们为您精选全球优质美妆个护产品，让您焕发自信光彩。</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#" class="btn btn-primary btn-lg px-5">探索系列产品</a>
+            <a href="#" class="btn btn-outline-primary btn-lg px-5">查看护肤指南</a>
+          </div>
+          <div class="mt-6">
+            <div class="d-flex align-items-center">
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">5000+</p>
+                <p class="text-muted small">美妆单品</p>
+              </div>
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">200+</p>
+                <p class="text-muted small">国际品牌</p>
+              </div>
+              <div>
+                <p class="text-dark font-weight-bold mb-1">97%</p>
+                <p class="text-muted small">顾客好评</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+          <div class="hero-img-container">
+            <img src="images/meizhuanggehu.png" alt="美妆产品展示" class="hero-img w-100 rounded-20 shadow-lg">
+            <div class="floating-badge floating-badge-1">
+              <p class="font-weight-bold mb-0">限时优惠</p>
+              <p class="text-sm mb-0">满399减50</p>
+            </div>
+            <div class="floating-badge floating-badge-2">
+              <p class="font-weight-bold mb-0">新品上市</p>
+              <p class="text-sm mb-0">独家限量系列</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+	 <!-- 美妆分类 -->
+  <div class="beauty-category">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2 category-item active">
+          <img src="images/hufu.png" alt="护肤">
+          <p>护肤</p>
+        </div>
+        <div class="col-md-2 category-item">
+          <img src="images/caizhuang.png" alt="彩妆">
+          <p>彩妆</p>
+        </div>
+        <div class="col-md-2 category-item">
+          <img src="images/xiangshui.png" alt="香水">
+          <p>香水</p>
+        </div>
+        <div class="col-md-2 category-item">
+          <img src="images/meifa.jpg" alt="美发">
+          <p>美发</p>
+        </div>
+        <div class="col-md-2 category-item">
+          <img src="images/shentihuli.png" alt="身体护理">
+          <p>身体护理</p>
+        </div>
+        <div class="col-md-2 category-item">
+          <img src="images/nanshihuli.png" alt="男士护理">
+          <p>男士护理</p>
+        </div>
+      </div>
+    </div>
+  </div>
+	
+  <!-- 精选产品区 -->
+  <section class="product-section py-10">
+    <div class="container">
+      <div class="text-center mb-8 fade-in">
+        <h2 class="display-5 fw-bold">精选美妆好物</h2>
+        <p class="text-muted mt-3">为您的美丽加分</p>
+      </div>
+      
+      <div class="row g-4">
+        <!-- 产品1 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/toumingzhisuanjinghuaye.jpg" alt="精华液" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">透明质酸精华液</h5>
+              <p class="product-category">护肤</p>
+              <div class="product-price d-flex align-items-center">¥299
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品2 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/yaguangkouhong.jpg" alt="口红" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">丝绒哑光口红</h5>
+              <p class="product-category">彩妆</p>
+              <div class="product-price d-flex align-items-center">¥159
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品3 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/nvshixiangshui.png" alt="香水" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">花漾女士香水</h5>
+              <p class="product-category">香水</p>
+              <div class="product-price d-flex align-items-center">¥499
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品4 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/bushuimianmo.png" alt="面膜" class="product-image">
+              <span class="product-badge badge-sale">折扣</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">水光补水面膜</h5>
+              <p class="product-category">护肤</p>
+             <div class="product-price d-flex align-items-center">¥199
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品5 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/xifashui.jpg" alt="洗发水" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">丝滑柔顺洗发水</h5>
+              <p class="product-category">美发</p>
+              <div class="product-price d-flex align-items-center">¥89
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品6 -->
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/fangshaishuang.png" alt="防晒霜" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">轻薄防晒霜</h5>
+              <p class="product-category">护肤</p>
+              <div class="product-price d-flex align-items-center">¥129
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-4 fade-in">
+        <button class="btn btn-outline-primary px-8 py-3 rounded-full">
+          查看更多产品 <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 热门品牌 -->
+  <section class="popular-brands">
+    <div class="container">
+      <div class="text-center mb-8 fade-in">
+        <h2 class="display-5 fw-bold">热门品牌</h2>
+        <p class="text-muted mt-3">值得信赖的品质保证</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-4 fade-in">
+          <div class="brand-card">
+            <div class="brand-logo">
+              <img src="images/yashilandai.png" alt="品牌logo">
+            </div>
+            <h4 class="mb-2">雅诗兰黛</h4>
+            <p class="text-muted">全球知名高端美妆品牌</p>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="brand-card">
+            <div class="brand-logo">
+              <img src="images/lankou.png" alt="品牌logo">
+            </div>
+            <h4 class="mb-2">兰蔻</h4>
+            <p class="text-muted">法国奢侈美妆品牌</p>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="brand-card">
+            <div class="brand-logo">
+              <img src="images/zishengtang.jpg" alt="品牌logo">
+            </div>
+            <h4 class="mb-2">资生堂</h4>
+            <p class="text-muted">日本领先美妆品牌</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 美妆灵感 -->
+  <section class="beauty-inspiration">
+    <div class="container">
+      <div class="text-center mb-8 fade-in">
+        <h2 class="display-5 fw-bold">美妆灵感</h2>
+        <p class="text-muted mt-3">发现适合您的妆容风格</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-4 fade-in">
+          <div class="inspiration-card">
+            <img src="images/qingxingzhuang.jpg" alt="日常妆容">
+            <div class="inspiration-overlay">
+              <h4 class="font-weight-bold">清新日常妆容</h4>
+              <p class="mb-0">自然透亮，展现青春活力</p>
+              <div class="mt-2">
+                <span class="tag tag-makeup">彩妆</span>
+                <span class="tag tag-skincare">护肤</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="inspiration-card">
+            <img src="images/paiduizhuang.png" alt="派对妆容">
+            <div class="inspiration-overlay">
+              <h4 class="font-weight-bold">派对妆容</h4>
+              <p class="mb-0">闪耀迷人，成为焦点</p>
+              <div class="mt-2">
+                <span class="tag tag-makeup">彩妆</span>
+                <span class="tag tag-fragrance">香水</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="inspiration-card">
+            <img src="images/hufujiaocheng.jpg" alt="护肤流程">
+            <div class="inspiration-overlay">
+              <h4 class="font-weight-bold">完整护肤流程</h4>
+              <p class="mb-0">细致呵护，焕发肌肤活力</p>
+              <div class="mt-2">
+                <span class="tag tag-skincare">护肤</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4 fade-in">
+        <a href="#" class="btn btn-primary px-6 py-3">
+          查看更多灵感 <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 美妆评测 -->
+  <section class="beauty-reviews">
+    <div class="container">
+      <div class="text-center mb-8 fade-in">
+        <h2 class="display-5 fw-bold">用户真实评价</h2>
+        <p class="text-muted mt-3">看看大家对我们产品的评价</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-4 fade-in">
+          <div class="review-card">
+            <div class="mb-4">
+              <div class="text-primary">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+            <p class="mb-4">"这款精华液真的太好用了，用了一周皮肤明显变水润了，吸收也很快，不会觉得油腻。"</p>
+            <div class="review-author">
+              <img src="images/touxiang7.png" alt="用户头像">
+              <div>
+                <h5 class="mb-0">张女士</h5>
+                <p class="text-muted text-sm mb-0">上海</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="review-card">
+            <div class="mb-4">
+              <div class="text-primary">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+            <p class="mb-4">"这款口红的颜色非常适合我，质地也很好，不干燥，持久度也不错，已经回购多次了。"</p>
+            <div class="review-author">
+              <img src="images/touxiang8.png" alt="用户头像">
+              <div>
+                <h5 class="mb-0">李女士</h5>
+                <p class="text-muted text-sm mb-0">北京</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="review-card">
+            <div class="mb-4">
+              <div class="text-primary">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+            <p class="mb-4">"这款香水的味道非常好闻，清新淡雅，很适合夏天使用，留香时间也很长。"</p>
+            <div class="review-author">
+              <img src="images/touxiang9.png" alt="用户头像">
+              <div>
+                <h5 class="mb-0">王女士</h5>
+                <p class="text-muted text-sm mb-0">广州</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 新品预览 -->
+  <section class="new-arrivals">
+    <div class="container">
+      <div class="text-center mb-8 fade-in">
+        <h2 class="display-5 fw-bold">新品预览</h2>
+        <p class="text-muted mt-3">即将上市的美妆新品</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-4 fade-in">
+          <div class="new-arrival-card">
+            <img src="images/guangganfendiye.png" alt="粉底液">
+            <div class="new-arrival-overlay">
+              <h4 class="font-weight-bold">光感粉底液</h4>
+              <p class="mb-2">轻薄透气，打造自然妆效</p>
+              <div class="price-tag">¥269</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="new-arrival-card">
+            <img src="images/xiufujinghuayou.png" alt="精华油">
+            <div class="new-arrival-overlay">
+              <h4 class="font-weight-bold">修护精华油</h4>
+              <p class="mb-2">深层滋养，修护受损肌肤</p>
+              <div class="price-tag">¥399</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 fade-in">
+          <div class="new-arrival-card">
+            <img src="images/yanyingpan.jpg" alt="眼影盘">
+            <div class="new-arrival-overlay">
+              <h4 class="font-weight-bold">彩虹眼影盘</h4>
+              <p class="mb-2">多种色彩，满足不同妆容需求</p>
+              <div class="price-tag">¥189</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4 fade-in">
+        <a href="#" class="btn btn-outline-primary px-6 py-3">
+          预约新品通知 <i class="fas fa-bell ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function () {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+  
+    // 渐入动画
+    function checkFadeIn() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (elementPosition < windowHeight - 100) {
+          element.classList.add('appear');
+        }
+      });
+    }
+
+    // 初始检查
+    checkFadeIn();
+
+    // 滚动时检查
+    window.addEventListener('scroll', checkFadeIn);
+
+    // 风格分类点击事件
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除所有活跃状态
+        categoryItems.forEach(i => i.classList.remove('active'));
+        // 添加当前活跃状态
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>

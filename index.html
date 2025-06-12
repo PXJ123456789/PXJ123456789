@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 高品质电商平台</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FF6B35;
+      --secondary-color: #4ECDC4;
+      --accent-color: #FFD166;
+      --dark-color: #292F36;
+      --light-color: #F7FFF7;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: #f8f9fa;
+      overflow-x: hidden;
+    }
+    
+    /* 导航栏动画 */
+    .navbar {
+      transition: var(--transition);
+      z-index: 1000;
+    }
+    .navbar.scrolled {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transform: translateY(-0);
+    }
+    .navbar-toggler {
+      transition: var(--transition);
+    }
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255, 107, 53, 0.25);
+    }
+    
+    /* 轮播图动画 */
+    .carousel-item {
+      height: 500px;
+      background-color: #eee;
+      overflow: hidden;
+      position: relative;
+    }
+    .carousel-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+    .carousel-caption {
+      bottom: 150px;
+      max-width: 800px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      opacity: 0;
+      transform: translateX(-50%) translateY(30px);
+      transition: var(--transition);
+    }
+    .carousel-item.active .carousel-caption {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .carousel-control-prev, .carousel-control-next {
+      z-index: 3;
+      transition: var(--transition);
+    }
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+      opacity: 0.8;
+    }
+    
+    /* 卡片动画 */
+    .product-card {
+      transition: var(--transition);
+      transform: translateY(0);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .product-card img {
+      transition: var(--transition);
+    }
+    .product-card:hover img {
+      transform: scale(1.05);
+    }
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      z-index: 1;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .product-card:hover .product-badge {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* 标签页动画 */
+    .category-tab .nav-pills .nav-link {
+      color: var(--dark-color);
+      border-radius: 0;
+      border-bottom: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .category-tab .nav-pills .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+    .category-tab .nav-pills .nav-link:hover::after,
+    .category-tab .nav-pills .nav-link.active::after {
+      width: 100%;
+    }
+    .tab-pane {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: var(--transition);
+    }
+    .tab-pane.show.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* 按钮动画 */
+    .btn {
+      transition: var(--transition);
+      transform: scale(1);
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* 促销区动画 */
+    .promotion-item {
+      transition: var(--transition);
+      transform: translateY(0);
+    }
+    .promotion-item:hover {
+      transform: translateY(-5px);
+    }
+    .countdown-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .countdown-digit {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--dark-color);
+      color: white;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: var(--transition);
+    }
+    .countdown-digit:hover {
+      background-color: var(--primary-color);
+    }
+    
+    /* 滚动渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* 页脚动画 */
+    .footer a {
+      transition: var(--transition);
+    }
+    .footer a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    .social-icon {
+      transition: var(--transition);
+    }
+    .social-icon:hover {
+      transform: translateY(-5px) rotate(5deg);
+    }
+    
+    /* 页脚背景颜色 */
+    .footer {
+      background-color: var(--dark-color);
+      color: #fff;
+    }
+    
+    /* 媒体查询 */
+    @media (max-width: 768px) {
+      .carousel-item {
+        height: 300px;
+      }
+      .carousel-caption {
+        bottom: 80px;
+        padding: 0 15px;
+      }
+      .featured-products .row > div,
+      .category-tab .row > div {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html#">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 轮播图 -->
+  <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="images/xiari.png" class="d-block w-100" alt="轮播图1">
+        <div class="carousel-caption text-start">
+          <h1 class="animate__animated animate__fadeInDown">夏季新品特惠</h1>
+          <p class="animate__animated animate__fadeInDown" style="animation-delay: 0.2s;">全场满299减50，爆款单品低至5折</p>
+          <a href="#" class="btn btn-primary btn-lg animate__animated animate__fadeInDown" style="animation-delay: 0.4s;">立即抢购</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="images/shuma.png" class="d-block w-100" alt="轮播图2">
+        <div class="carousel-caption text-start">
+          <h1>数码家电狂欢</h1>
+          <p>新品手机、笔记本电脑限时折扣</p>
+          <a href="#" class="btn btn-primary btn-lg">查看详情</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="images/jiaju.png" class="d-block w-100" alt="轮播图3">
+        <div class="carousel-caption text-start">
+          <h1>家居生活节</h1>
+          <p>品质家具、日用百货买一送一</p>
+          <a href="#" class="btn btn-primary btn-lg">进入会场</a>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">上一张</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">下一张</span>
+    </button>
+  </div>
+
+  <!-- 主要内容区 -->
+  <main class="container mt-5 pb-5">
+    <!-- 标签页功能 - 商品分类 -->
+    <section class="category-tab mt-5 fade-in">
+      <h2 class="text-center mb-4">热门分类</h2>
+      <div class="tab-content" id="categoryTabContent">
+        <div class="tab-pane fade show active" id="electronics" role="tabpanel" aria-labelledby="electronics-tab">
+          <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/shouji.png" class="card-img-top" alt="智能手机">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">智能手机</h5>
+                  <p class="card-text">最新款5G手机，性能强劲</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/bijiben.png" class="card-img-top" alt="笔记本电脑">
+                  <span class="product-badge bg-secondary text-white">新品</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">笔记本电脑</h5>
+                  <p class="card-text">轻薄本、游戏本任你选</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/pingban.png" class="card-img-top" alt="平板电脑">
+                  <span class="product-badge bg-accent-color text-dark">折扣</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">平板电脑</h5>
+                  <p class="card-text">学习办公娱乐多面手</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/shoubiao.png" class="card-img-top" alt="智能手表">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">智能手表</h5>
+                  <p class="card-text">健康监测，智能提醒</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="clothing" role="tabpanel" aria-labelledby="clothing-tab">
+          <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/Txu.png" class="card-img-top" alt="男士T恤">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">男士T恤</h5>
+                  <p class="card-text">纯棉材质，舒适透气</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/lianyiqun.png" class="card-img-top" alt="女士连衣裙">
+                  <span class="product-badge bg-secondary text-white">新品</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">女士连衣裙</h5>
+                  <p class="card-text">时尚设计，多种风格</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/xiuxianku.png" class="card-img-top" alt="休闲裤">
+                  <span class="product-badge bg-accent-color text-dark">折扣</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">休闲裤</h5>
+                  <p class="card-text">百搭款式，舒适好穿</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/yundongxie.png" class="card-img-top" alt="运动鞋">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">运动鞋</h5>
+                  <p class="card-text">专业运动，保护双脚</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/buliaoshafa.png" class="card-img-top" alt="沙发">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">布艺沙发</h5>
+                  <p class="card-text">舒适面料，多种颜色</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/chuangshang.png" class="card-img-top" alt="床上用品">
+                  <span class="product-badge bg-secondary text-white">新品</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">床上用品</h5>
+                  <p class="card-text">纯棉材质，亲肤舒适</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/chufang.png" class="card-img-top" alt="厨房电器">
+                  <span class="product-badge bg-accent-color text-dark">折扣</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">厨房电器</h5>
+                  <p class="card-text">智能家电，便捷生活</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                  <img src="images/jiajuzhuangshi.png" class="card-img-top" alt="家居装饰">
+                  <span class="product-badge bg-primary text-white">热销</span>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">家居装饰</h5>
+                  <p class="card-text">创意设计，美化家居</p>
+                  <a href="#" class="btn btn-primary w-100">查看更多</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="nav nav-pills justify-content-center mt-4" id="categoryTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="electronics-tab" data-bs-toggle="tab" data-bs-target="#electronics" type="button" role="tab" aria-controls="electronics" aria-selected="true">电子产品</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="clothing-tab" data-bs-toggle="tab" data-bs-target="#clothing" type="button" role="tab" aria-controls="clothing" aria-selected="false">服装鞋帽</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false">家居生活</button>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 热门商品 -->
+    <section class="featured-products mt-5 fade-in">
+      <h2 class="text-center mb-4">热门推荐</h2>
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="card product-card h-100">
+            <div class="position-relative overflow-hidden">
+              <img src="images/erji.png" class="card-img-top" alt="热门商品1">
+              <span class="product-badge bg-primary text-white">热销</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">无线蓝牙耳机</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary font-weight-bold">¥199</span>
+                <a href="#" class="btn btn-sm btn-primary">
+                  <i class="fas fa-shopping-cart"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card product-card h-100">
+            <div class="position-relative overflow-hidden">
+              <img src="images/baowenbei.png" class="card-img-top" alt="热门商品2">
+              <span class="product-badge bg-secondary text-white">新品</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">智能保温杯</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary font-weight-bold">¥89</span>
+                <a href="#" class="btn btn-sm btn-primary">
+                  <i class="fas fa-shopping-cart"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card product-card h-100">
+            <div class="position-relative overflow-hidden">
+              <img src="images/jianshenqicai.png" class="card-img-top" alt="热门商品3">
+              <span class="product-badge bg-accent-color text-dark">折扣</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">运动健身器材</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary font-weight-bold">¥399</span>
+                <a href="#" class="btn btn-sm btn-primary">
+                  <i class="fas fa-shopping-cart"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card product-card h-100">
+            <div class="position-relative overflow-hidden">
+              <img src="images/bb.png" class="card-img-top" alt="热门商品4">
+              <span class="product-badge bg-primary text-white">热销</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">女士时尚包包</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary font-weight-bold">¥299</span>
+                <a href="#" class="btn btn-sm btn-primary">
+                  <i class="fas fa-shopping-cart"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 促销活动区 -->
+    <section class="promotion mt-5 fade-in">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="bg-primary p-4 text-white text-center rounded-lg shadow-lg">
+            <h3>限时特惠</h3>
+            <p class="fs-5 mt-2">全场满399减100，满599减200</p>
+            <div class="d-flex justify-content-center mt-4">
+              <div class="countdown-box">
+                <div class="countdown-digit" id="countdown-hours">02</div>
+                <div class="countdown-digit">:</div>
+                <div class="countdown-digit" id="countdown-minutes">59</div>
+                <div class="countdown-digit">:</div>
+                <div class="countdown-digit" id="countdown-seconds">30</div>
+              </div>
+            </div>
+            <a href="#" class="btn btn-light mt-4">立即参与</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="bg-secondary p-4 text-white text-center rounded-lg shadow-lg">
+            <h3>新人福利</h3>
+            <p class="fs-5 mt-2">注册即送50元新人礼包</p>
+            <img src="images/50libao.png" alt="新人礼包" class="mt-3 hover-scale" style="width: 200px; transition: transform 0.3s;">
+            <a href="#" class="btn btn-light mt-4">立即注册</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 引入Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // 滚动渐入动画
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    });
+    
+    // 倒计时功能
+    function startCountdown() {
+      let hours = 2;
+      let minutes = 59;
+      let seconds = 30;
+      
+      const countdownInterval = setInterval(function() {
+        seconds--;
+        
+        if (seconds < 0) {
+          seconds = 59;
+          minutes--;
+        }
+        
+        if (minutes < 0) {
+          minutes = 59;
+          hours--;
+        }
+        
+        if (hours < 0) {
+          clearInterval(countdownInterval);
+          return;
+        }
+        
+        document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+      }, 1000);
+    }
+    
+    // 触摸事件处理 - 增加视觉反馈
+    document.addEventListener('touchstart', function(event) {
+      const target = event.target;
+      if (target.tagName === 'BUTTON' || target.classList.contains('btn')) {
+        target.style.transform = 'scale(0.95)';
+      }
+    });
+    
+    document.addEventListener('touchend', function(event) {
+      const target = event.target;
+      if (target.tagName === 'BUTTON' || target.classList.contains('btn')) {
+        target.style.transform = 'scale(1)';
+      }
+    });
+    
+    // 初始化滚动动画
+    window.dispatchEvent(new Event('scroll'));
+    
+    // 启动倒计时
+    startCountdown();
+  </script>
+</body>
+</html>

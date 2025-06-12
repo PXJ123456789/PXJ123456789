@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 图书音像</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FFA500;
+      --secondary-color: #DDA0DD;
+      --accent-color: #FFD700;
+      --dark-color: #2A2A2A;
+      --light-color: #F9F9F9;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --book-color: #8B4513;
+      --media-color: #4169E1;
+      --category-bg: #F5F5DC;
+      --feature-bg: #E6E6FA;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: var(--light-color);
+      overflow-x: hidden;
+    }
+
+    /* 导航栏 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      color: var(--dark-color);
+      font-weight: 500;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 5px;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background-color: #FF8C00;
+      border-color: #FF8C00;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    /* 图书音像英雄区 */
+    .book-hero {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--light-color) 100%);
+      padding: 120px 0 80px;
+      margin-bottom: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .book-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/106/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .book-hero h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--dark-color);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .book-hero p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img {
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .hero-img:hover {
+      transform: translateY(-5px);
+    }
+
+    .floating-badge {
+      position: absolute;
+      background-color: var(--book-color);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-badge-1 {
+      top: 10%;
+      right: -5%;
+    }
+
+    .floating-badge-2 {
+      bottom: 15%;
+      left: -10%;
+      background-color: var(--media-color);
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* 图书音像产品卡片 */
+    .product-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      background-color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image-container {
+      height: 350px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-image-container img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .badge-hot {
+      background-color: var(--book-color);
+    }
+
+    .badge-new {
+      background-color: var(--primary-color);
+    }
+
+    .badge-sale {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    /* 页脚 */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      bottom: -8px;
+      left: 0;
+      background-color: var(--primary-color);
+    }
+
+    .footer ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer ul li a {
+      color: white;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .footer ul li a:hover {
+      opacity: 1;
+    }
+
+    /* 渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 分类导航 */
+    .category-nav {
+      background-color: var(--category-bg);
+      padding: 20px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .category-nav::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/107/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border-radius: 15px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      cursor: pointer;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .category-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .category-title {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* 特色推荐 */
+    .feature-section {
+      background-color: var(--feature-bg);
+      padding: 80px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .feature-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/108/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .feature-card {
+      background-color: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-image {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover .feature-image img {
+      transform: scale(1.05);
+    }
+
+    .feature-content {
+      padding: 20px;
+    }
+
+    .feature-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 畅销榜 */
+    .bestseller-section {
+      padding: 80px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .bestseller-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/109/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .bestseller-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border-radius: 15px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bestseller-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .bestseller-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--book-color);
+      margin-right: 20px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .bestseller-image {
+      width: 80px;
+      height: 120px;
+      margin-right: 20px;
+      overflow: hidden;
+      border-radius: 5px;
+    }
+
+    .bestseller-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .bestseller-item:hover .bestseller-image img {
+      transform: scale(1.05);
+    }
+
+    .bestseller-content {
+      flex: 1;
+    }
+
+    .bestseller-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .bestseller-author {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .bestseller-price {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    /* 书评区 */
+    .review-section {
+      padding: 80px 0;
+      background-color: var(--category-bg);
+      position: relative;
+    }
+    
+    .review-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/110/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .review-card {
+      background-color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .review-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .review-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 15px;
+    }
+
+    .review-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .review-user {
+      font-weight: bold;
+    }
+
+    .review-date {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .review-rating {
+      color: var(--accent-color);
+      margin-top: 5px;
+    }
+
+    .review-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 推荐阅读区 */
+    .reading-section {
+      padding: 80px 0;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .reading-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://picsum.photos/id/111/1200/800');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .reading-guide {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .reading-guide:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .reading-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--book-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .reading-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* 图书特色元素 */
+    .book-shelf {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background-color: #8B4513;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 0;
+    }
+    
+    /* 移动设备适配 */
+    @media (max-width: 768px) {
+      .book-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .book-hero p {
+        font-size: 1rem;
+      }
+      
+      .floating-badge {
+        display: none;
+      }
+      
+      .category-item {
+        margin-bottom: 15px;
+      }
+      
+      .bestseller-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .bestseller-number {
+        margin-bottom: 10px;
+      }
+      
+      .bestseller-image {
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="electronics.html">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+			  <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 英雄区域 -->
+  <section class="book-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+          <h1 class="display-4 fw-bold mb-4">探索知识世界<br><span class="text-primary">精选图书音像</span></h1>
+          <p class="lead mb-6">从文学名著到畅销小说，从音乐唱片到电影光盘，我们为您精选全球优质文化产品，让您沉浸在知识与艺术的海洋。</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#" class="btn btn-primary btn-lg px-5">探索系列产品</a>
+            <a href="#" class="btn btn-outline-primary btn-lg px-5">查看阅读指南</a>
+          </div>
+          <div class="mt-6">
+            <div class="d-flex align-items-center">
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">10000+</p>
+                <p class="text-muted small">图书音像</p>
+              </div>
+              <div class="me-4">
+                <p class="text-dark font-weight-bold mb-1">300+</p>
+                <p class="text-muted small">出版社合作</p>
+              </div>
+              <div>
+                <p class="text-dark font-weight-bold mb-1">97%</p>
+                <p class="text-muted small">顾客好评</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+          <div class="hero-img-container">
+            <img src="images/tushuyinxiang.png" alt="图书音像展示" class="hero-img w-100 rounded-20 shadow-lg">
+            <div class="floating-badge floating-badge-1">
+              <p class="font-weight-bold mb-0">限时优惠</p>
+              <p class="text-sm mb-0">满200减50</p>
+            </div>
+            <div class="floating-badge floating-badge-2">
+              <p class="font-weight-bold mb-0">正版保障</p>
+              <p class="text-sm mb-0">品质保证</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 图书特色装饰元素 -->
+    <div class="book-shelf"></div>
+  </section>
+
+  <!-- 分类导航 -->
+  <section class="category-nav fade-in">
+    <div class="container">
+      <div class="text-center mb-6">
+        <h2 class="display-5 fw-bold">浏览图书分类</h2>
+        <p class="text-muted mt-3">找到您需要的图书音像产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="category-title">文学名著</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-pen-nib"></i>
+            </div>
+            <div class="category-title">小说传记</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="category-title">教育学习</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-music"></i>
+            </div>
+            <div class="category-title">音乐唱片</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-film"></i>
+            </div>
+            <div class="category-title">影视光盘</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="category-title">电子书籍</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-headphones"></i>
+            </div>
+            <div class="category-title">有声读物</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="category-item">
+            <div class="category-icon">
+              <i class="fas fa-paint-brush"></i>
+            </div>
+            <div class="category-title">艺术画册</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 特色推荐 -->
+  <section class="feature-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">特色推荐</h2>
+        <p class="text-muted mt-3">为您精选的优质产品</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/jingdianwenxue.png" alt="经典文学" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">经典文学专区</h3>
+              <p class="feature-text">我们的经典文学专区汇集了世界文学史上的不朽名著，让您在阅读中感受人类智慧的结晶。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/changxiaoxiaoshuo.png" alt="畅销小说" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">畅销小说专区</h3>
+              <p class="feature-text">精选全球畅销小说，让您紧跟文学潮流，享受精彩的阅读体验。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yinyuechangpian.png" alt="音乐唱片" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">音乐唱片专区</h3>
+              <p class="feature-text">从古典音乐到流行歌曲，从摇滚到爵士乐，我们为您提供高品质的音乐唱片。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card">
+            <div class="feature-image">
+              <img src="images/yingshiguangpan.png" alt="影视光盘" class="w-100 h-100 object-cover">
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">影视光盘专区</h3>
+              <p class="feature-text">收藏经典电影和热门剧集，让您在家中享受影院级的视听体验。</p>
+              <a href="#" class="btn btn-outline-primary">查看全部</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 精选产品区 -->
+  <section class="product-section py-10 fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">精选图书音像好物</h2>
+        <p class="text-muted mt-3">为您的精神世界增添色彩</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- 产品1 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/bainiangudu.png" alt="文学名著" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">百年孤独</h5>
+              <p class="product-category">文学名著</p>
+              <div class="product-price d-flex align-items-center">¥68
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品2 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/santi.jpg" alt="小说" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">三体</h5>
+              <p class="product-category">科幻小说</p>
+             <div class="product-price d-flex align-items-center">¥99
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品3 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/beiduofendijiujiaoxiangqu.jpg" alt="音乐CD" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">贝多芬：第九交响曲</h5>
+              <p class="product-category">音乐CD</p>
+              <div class="product-price d-flex align-items-center">¥89
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品4 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/jiaofu.png" alt="电影DVD" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">教父三部曲</h5>
+              <p class="product-category">电影DVD</p>
+              <div class="product-price d-flex align-items-center">¥129
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品5 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/shijieminghua.png" alt="艺术画册" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">世界名画集</h5>
+              <p class="product-category">艺术画册</p>
+              <div class="product-price d-flex align-items-center">¥299
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品6 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/sijicihui.png" alt="教育学习" class="product-image">
+              <span class="product-badge badge-hot">热销</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">大学英语四级词汇</h5>
+              <p class="product-category">教育学习</p>
+              <div class="product-price d-flex align-items-center">¥45
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品7 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/aomanyupianjian.png" alt="有声读物" class="product-image">
+              <span class="product-badge badge-sale">促销</span>
+            </div>
+            <div class="product-details">
+
+              <h5 class="product-title">傲慢与偏见（有声书）</h5>
+              <p class="product-category">有声读物</p>
+              <div class="product-price d-flex align-items-center">¥79
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+        <!-- 产品8 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card">
+            <div class="product-image-container">
+              <img src="images/pythonbiancheng.jpg" alt="电子书籍" class="product-image">
+              <span class="product-badge badge-new">新品</span>
+            </div>
+            <div class="product-details">
+              <h5 class="product-title">Python编程从入门到精通</h5>
+              <p class="product-category">电子书籍</p>
+              <div class="product-price d-flex align-items-center">¥59
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary px-8 py-3 rounded-full">
+          查看更多产品 <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 畅销榜 -->
+  <section class="bestseller-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">畅销排行榜</h2>
+        <p class="text-muted mt-3">读者和听众的最爱</p>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="mb-4">图书畅销榜</h3>
+          <div class="bestseller-list">
+            <div class="bestseller-item">
+              <div class="bestseller-number">1</div>
+              <div class="bestseller-image">
+                <img src="images/huozhe.jpg" alt="活着">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">活着</div>
+                <div class="bestseller-author">余华</div>
+                <div class="product-price d-flex align-items-center">¥45
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+				</div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">2</div>
+              <div class="bestseller-image">
+                <img src="images/jieyou.png" alt="解忧杂货店">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">解忧杂货店</div>
+                <div class="bestseller-author">东野圭吾</div>
+                <div class="product-price d-flex align-items-center">¥48
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">3</div>
+              <div class="bestseller-image">
+                <img src="images/santiliti.png" alt="三体">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">三体</div>
+                <div class="bestseller-author">刘慈欣</div>
+                <div class="product-price d-flex align-items-center">¥99
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">4</div>
+              <div class="bestseller-image">
+                <img src="images/weicheng.jpg" alt="围城">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">围城</div>
+                <div class="bestseller-author">钱钟书</div>
+                <div class="product-price d-flex align-items-center">¥42
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">5</div>
+              <div class="bestseller-image">
+                <img src="images/pingfandeshijie.png" alt="平凡的世界">
+              </div>
+              <div class="bestseller-content">
+			   <div class="bestseller-title">平凡的世界</div>
+                <div class="bestseller-author">路遥</div>
+                <div class="product-price d-flex align-items-center">¥98
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h3 class="mb-4">音乐畅销榜</h3>
+          <div class="bestseller-list">
+            <div class="bestseller-item">
+              <div class="bestseller-number">1</div>
+              <div class="bestseller-image">
+                <img src="images/jingdianmingqu.png" alt="经典名曲集">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">经典名曲集</div>
+                <div class="bestseller-author">各位艺术家</div>
+                <div class="product-price d-flex align-items-center">¥68
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">2</div>
+              <div class="bestseller-image">
+                <img src="images/liuxingyinyue.png" alt="流行音乐精选">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">流行音乐精选</div>
+                <div class="bestseller-author">华语群星</div>
+                <div class="product-price d-flex align-items-center">¥59
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">3</div>
+              <div class="bestseller-image">
+                <img src="images/yaogun.png" alt="摇滚经典">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">摇滚经典</div>
+                <div class="bestseller-author">Beyond</div>
+                <div class="product-price d-flex align-items-center">¥78
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">4</div>
+              <div class="bestseller-image">
+                <img src="images/jueshiyue.png" alt="爵士乐集锦">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">爵士乐集锦</div>
+                <div class="bestseller-author">爵士乐团</div>
+                <div class="product-price d-flex align-items-center">¥85
+			  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+				<i class="fas fa-shopping-cart"></i>
+			  </button>
+			</div>
+              </div>
+            </div>
+            <div class="bestseller-item">
+              <div class="bestseller-number">5</div>
+              <div class="bestseller-image">
+                <img src="images/dianyingyuansheng.png" alt="电影原声集">
+              </div>
+              <div class="bestseller-content">
+                <div class="bestseller-title">电影原声集</div>
+                <div class="bestseller-author">电影原声乐团</div>
+               <div class="product-price d-flex align-items-center">¥98
+				  <button class="btn btn-primary btn-sm ms-2 hover:scale-110 transition">
+					<i class="fas fa-shopping-cart"></i>
+				  </button>
+				</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 书评区 -->
+  <section class="review-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">读者书评</h2>
+        <p class="text-muted mt-3">听听其他读者的心声</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">
+                <img src="images/touxiang23.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="review-user">张先生</div>
+                <div class="review-date">2023年5月15日</div>
+              </div>
+            </div>
+            <div class="review-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <h3 class="review-title">《三体》读后感</h3>
+            <p>这本书真的太震撼了，作者的想象力令人叹为观止，描绘的宇宙观和文明观让我重新思考人类在宇宙中的位置。</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">
+                <img src="images/touxiang24.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="review-user">李女士</div>
+                <div class="review-date">2023年5月10日</div>
+              </div>
+            </div>
+            <div class="review-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <h3 class="review-title">《活着》读后感</h3>
+            <p>余华的文字朴实无华却直击人心，读完这本书让我对生命有了更深的理解，也更加珍惜眼前的生活。</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">
+                <img src="images/touxiang25.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="review-user">王先生</div>
+                <div class="review-date">2023年5月5日</div>
+              </div>
+            </div>
+            <div class="review-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="far fa-star"></i>
+            </div>
+            <h3 class="review-title">《解忧杂货店》读后感</h3>
+            <p>东野圭吾的这本书让我感受到人性的温暖和希望，故事中的每个角色都让我印象深刻，值得反复阅读。</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-avatar">
+                <img src="images/touxiang26.png" alt="用户头像">
+              </div>
+              <div>
+                <div class="review-user">赵女士</div>
+                <div class="review-date">2023年5月1日</div>
+              </div>
+            </div>
+            <div class="review-rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <h3 class="review-title">《平凡的世界》读后感</h3>
+            <p>这本书让我看到了不同阶层的人的生活状态，孙少安和孙少平的故事激励我要勇敢面对生活中的困难。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 推荐阅读区 -->
+  <section class="reading-section fade-in">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="display-5 fw-bold">推荐阅读</h2>
+        <p class="text-muted mt-3">让阅读成为一种生活方式</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="reading-guide">
+            <div class="reading-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <h3 class="reading-title">经典文学入门</h3>
+            <p class="reading-text">从这里开始探索世界文学名著，感受经典的魅力。</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="reading-guide">
+            <div class="reading-icon">
+              <i class="fas fa-headphones"></i>
+            </div>
+            <h3 class="reading-title">有声书的魅力</h3>
+            <p class="reading-text">让声音带领您进入故事的世界，随时随地享受阅读的乐趣。</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="reading-guide">
+            <div class="reading-icon">
+              <i class="fas fa-music"></i>
+            </div>
+            <h3 class="reading-title">音乐与生活</h3>
+            <p class="reading-text">探索音乐的奥秘，让音乐成为生活中不可或缺的一部分。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+	
+		  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function () {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+  
+    // 渐入动画
+    function checkFadeIn() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        if (elementPosition < windowHeight - 100) {
+          element.classList.add('appear');
+        }
+      });
+    }
+
+    // 初始检查
+    checkFadeIn();
+
+    // 滚动时检查
+    window.addEventListener('scroll', checkFadeIn);
+
+    // 风格分类点击事件
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除所有活跃状态
+        categoryItems.forEach(i => i.classList.remove('active'));
+        // 添加当前活跃状态
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>		

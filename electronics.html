@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星选易购 - 电子产品</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #FF6B35;
+      --secondary-color: #4ECDC4;
+      --accent-color: #FFD166;
+      --dark-color: #292F36;
+      --light-color: #F7FFF7;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      color: var(--dark-color);
+      background-color: #f8f9fa;
+      overflow-x: hidden;
+    }
+    
+    /* 导航栏动画 */
+    .navbar {
+      transition: var(--transition);
+      z-index: 1000;
+    }
+    .navbar.scrolled {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transform: translateY(-0);
+    }
+    .navbar-toggler {
+      transition: var(--transition);
+    }
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255, 107, 53, 0.25);
+    }
+    
+    /* 产品卡片动画 */
+    .product-card {
+      transition: var(--transition);
+      transform: translateY(0);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      overflow: hidden;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .product-card img {
+      transition: var(--transition);
+      transform: scale(1);
+    }
+    .product-card:hover img {
+      transform: scale(1.05);
+    }
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      z-index: 1;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .product-card:hover .product-badge {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* 分类标签动画 */
+    .category-tab .nav-pills .nav-link {
+      color: var(--dark-color);
+      border-radius: 0;
+      border-bottom: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .category-tab .nav-pills .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+    .category-tab .nav-pills .nav-link:hover::after,
+    .category-tab .nav-pills .nav-link.active::after {
+      width: 100%;
+    }
+    
+    /* 按钮动画 */
+    .btn {
+      transition: var(--transition);
+      transform: scale(1);
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* 滚动渐入动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* 页脚动画 */
+    .footer a {
+      transition: var(--transition);
+    }
+    .footer a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    .social-icon {
+      transition: var(--transition);
+    }
+    .social-icon:hover {
+      transform: translateY(-5px) rotate(5deg);
+    }
+    
+    /* 页脚背景颜色 */
+    .footer {
+      background-color: var(--dark-color);
+      color: #fff;
+    }
+    
+    /* 电子产品页面特有样式 */
+    .hero-section {
+      height: 500px;
+      background: linear-gradient(135deg, var(--dark-color) 0%, #444e5a 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding-top: 120px;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60%;
+      height: 100%;
+      opacity: 0.3;
+      background-image: url('images/electronics-hero.jpg');
+      background-size: cover;
+      background-position: center;
+      transform: skewX(-10deg);
+      transform-origin: top right;
+    }
+    
+    .product-filter {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .product-filter .filter-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    
+    .product-filter .filter-group {
+      margin-bottom: 20px;
+    }
+    
+    .product-filter .form-check {
+      margin-bottom: 8px;
+    }
+    
+    .product-card .card-body {
+      position: relative;
+    }
+    
+    .product-card .card-footer {
+      background-color: white;
+      border-top: 1px solid #eee;
+      padding: 15px 20px;
+    }
+    
+    .product-card .product-price {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    
+    
+    .featured-banner {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #ff8a5c 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 8px;
+      margin-bottom: 50px;
+    }
+    
+    .featured-banner h3 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    
+    .featured-banner p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+    
+    .spec-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .spec-card h4 {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .spec-item:last-child {
+      border-bottom: none;
+    }
+    
+    /* 媒体查询 */
+    @media (max-width: 768px) {
+      .hero-section {
+        height: 400px;
+      }
+      .hero-content {
+        padding-top: 100px;
+      }
+      .hero-bg {
+        width: 100%;
+        opacity: 0.2;
+      }
+      .product-filter {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 - 汉堡菜单 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.png" alt="星选易购logo" style="width: 120px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="electronics.html">电子产品</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clothing.html">服装鞋帽</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="home-living.html">家居生活</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="beauty.html">美妆个护</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="food.html">食品生鲜</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="baby-kids.html">母婴儿童</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sport.html">运动户外</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="book.html">图书音像</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">
+            <i class="fas fa-search"></i> 搜索
+          </a>
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> 购物车
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+<!-- 英雄区 -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-6 mb-lg-0 fade-in">
+        <h1 class="display-4 fw-bold mb-4">探索科技新境界</h1>
+        <p class="lead mb-6">精选全球顶尖电子产品，引领智能生活新潮流。从智能手机到智能家居，为您带来全方位的科技体验。</p>
+        <div class="d-flex flex-wrap gap-3">
+ 		  <a href="#smartphones" class="btn btn-primary btn-lg px-5" id="explore-devices-btn">探索智能设备</a>
+          <a href="#special-offers" class="btn btn-outline-primary btn-lg px-5" id="view-offers-btn">查看限时优惠</a>
+        </div>
+        <div class="mt-6">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <p class="text-write font-weight-bold mb-1">10000+</p>
+              <p class="text-write small">电子产品</p>
+            </div>
+            <div class="me-4">
+              <p class="text-write font-weight-bold mb-1">50+</p>
+              <p class="text-write small">知名品牌</p>
+            </div>
+            <div>
+              <p class="text-write font-weight-bold mb-1">98%</p>
+              <p class="text-write small">顾客满意度</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 fade-in" style="transition-delay: 0.2s;">
+        <div class="position-relative">
+          <img src="images/dianzichanping.png" alt="电子产品展示" class="w-100 rounded-20 shadow-lg">
+          <div class="position-absolute top-50 end-0 translate-middle-y p-4 bg-primary rounded-15 shadow-lg">
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white text-primary p-3 rounded-circle">
+                <i class="fas fa-tag fa-lg"></i>
+              </div>
+              <div>
+                <p class="text-white font-weight-bold mb-0">限时特惠</p>
+                <p class="text-white small mb-0">全场满3000减300</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 装饰元素 -->
+  <div class="position-relative">
+    <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden">
+      <svg class="position-absolute top-0 start-0" width="100%" height="100%" preserveAspectRatio="none">
+        <polygon points="0,0 0,100% 100%,100%" fill="url(#gradient)" />
+      </svg>
+      <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient" style="background-image: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);"></div>
+    </div>
+  </div>
+</section>
+  <!-- 主要内容区 -->
+  <main class="container mt-5 pb-5">
+    <!-- 特色横幅 -->
+    <div id="special-offers" class="featured-banner fade-in">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h3>夏季数码狂欢，限时特惠</h3>
+          <p>全场电子产品满减优惠，新用户注册立享100元优惠券</p>
+          <a href="#" class="btn btn-light text-primary">立即查看</a>
+        </div>
+        <div class="col-md-4 text-center">
+          <i class="fas fa-tag fa-4x"></i>
+        </div>
+      </div>
+    </div>
+    <!-- 产品筛选和展示 -->
+    <div id="smartphones" class="row">
+      <!-- 左侧筛选栏 -->
+      <div class="col-md-3">
+        <div class="product-filter fade-in">
+          <h4 class="filter-title">产品分类</h4>
+          <div class="filter-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-all">
+              <label class="form-check-label" for="filter-all">
+
+                全部产品
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-smartphones">
+              <label class="form-check-label" for="filter-smartphones">
+                智能手机
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-laptops">
+              <label class="form-check-label" for="filter-laptops">
+                笔记本电脑
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-tablets">
+              <label class="form-check-label" for="filter-tablets">
+                平板电脑
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-smartwatches">
+              <label class="form-check-label" for="filter-smartwatches">
+                智能手表
+              </label>
+            </div>
+          </div>
+          
+          <h4 class="filter-title">价格范围</h4>
+          <div class="filter-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-price-1">
+              <label class="form-check-label" for="filter-price-1">
+                0-1000元
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-price-2">
+              <label class="form-check-label" for="filter-price-2">
+                1000-3000元
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-price-3">
+              <label class="form-check-label" for="filter-price-3">
+                3000-5000元
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-price-4">
+              <label class="form-check-label" for="filter-price-4">
+                5000元以上
+              </label>
+            </div>
+          </div>
+          
+          <h4 class="filter-title">品牌</h4>
+          <div class="filter-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-brand-1">
+              <label class="form-check-label" for="filter-brand-1">
+                苹果
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-brand-2">
+              <label class="form-check-label" for="filter-brand-2">
+                华为
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-brand-3">
+              <label class="form-check-label" for="filter-brand-3">
+                小米
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-brand-4">
+              <label class="form-check-label" for="filter-brand-4">
+                三星
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-brand-5">
+              <label class="form-check-label" for="filter-brand-5">
+                其他品牌
+              </label>
+            </div>
+			  
+			  
+			  
+          </div>
+         			 <h4 class="filter-title">促销活动</h4>
+          <div class="filter-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-xinpin">
+              <label class="form-check-label" for="filter-xinpin">
+                新品上市
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-rexiao">
+              <label class="form-check-label" for="filter-rexiao">
+                热销商品
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="filter-zhekou">
+              <label class="form-check-label" for="filter-zhekou">
+                限时折扣
+              </label>
+            </div>
+             </div>
+			
+          <button class="btn btn-primary w-100" id="filter-btn">应用筛选</button>
+        </div>
+      </div>
+      
+      <!-- 右侧产品展示 -->
+      <div class="col-md-9">
+        <!-- 排序和视图控制 -->
+        <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+          <div class="sort-options">
+            <label for="sort-select" class="me-2">&nbsp;</label>
+            <select class="form-select" id="sort-select">
+              <option value="popular">人气优先</option>
+              <option value="newest">最新上架</option>
+              <option value="price-low">价格从低到高</option>
+              <option value="price-high">价格从高到低</option>
+            </select>
+          </div>
+          <div class="view-options">
+            <button class="btn btn-outline-primary me-2"><i class="fas fa-th-large"></i></button>
+            <button class="btn btn-outline-primary"><i class="fas fa-list"></i></button>
+          </div>
+        </div>
+        
+        <!-- 产品网格 -->
+        <div class="row g-4" id="product-container">
+          <!-- 产品将通过JS动态渲染 -->
+        </div>
+        
+        <!-- 分页 -->
+        <div class="d-flex justify-content-center mt-5 fade-in">
+          <nav aria-label="Page navigation">
+            <ul class="pagination" id="pagination">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+              <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+              <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 技术参数卡片 -->
+    <div class="row mt-5 fade-in">
+      <div class="col-md-6">
+        <div class="spec-card">
+          <h4>智能手机技术参数</h4>
+          <div class="spec-item">
+            <span>处理器</span>
+            <span>最新一代旗舰处理器</span>
+          </div>
+          <div class="spec-item">
+            <span>屏幕尺寸</span>
+            <span>6.5英寸以上</span>
+          </div>
+          <div class="spec-item">
+            <span>分辨率</span>
+            <span>2K+分辨率</span>
+          </div>
+          <div class="spec-item">
+            <span>摄像头</span>
+            <span>后置多摄，最高支持1.08亿像素</span>
+          </div>
+          <div class="spec-item">
+            <span>电池容量</span>
+            <span>4500mAh以上</span>
+          </div>
+          <div class="spec-item">
+            <span>充电技术</span>
+            <span>快充/无线充电</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="spec-card">
+          <h4>笔记本电脑技术参数</h4>
+          <div class="spec-item">
+            <span>处理器</span>
+            <span>最新一代高性能处理器</span>
+          </div>
+          <div class="spec-item">
+            <span>内存</span>
+            <span>8GB/16GB/32GB可选</span>
+          </div>
+          <div class="spec-item">
+            <span>存储</span>
+            <span>512GB/1TB SSD</span>
+          </div>
+          <div class="spec-item">
+            <span>显卡</span>
+            <span>独立显卡/NVIDIA GeForce系列</span>
+          </div>
+          <div class="spec-item">
+            <span>屏幕</span>
+            <span>1080P/2K/4K可选，高刷新率</span>
+          </div>
+          <div class="spec-item">
+            <span>续航</span>
+            <span>最长可达12小时</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 用户评价 -->
+    <section class="mt-5 fade-in">
+      <h2 class="text-center mb-4">用户评价</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="user-info">
+                <img src="images/touxiang1.png" alt="用户头像" class="rounded-circle" style="width: 50px; height: 50px;">
+                <div class="ms-3">
+                  <h5 class="mb-0">张先生</h5>
+                  <div class="product-stars">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                  </div>
+                </div>
+              </div>
+              <span class="text-muted">2023-05-15</span>
+            </div>
+            <p class="mb-0">这款手机的拍照效果非常出色，特别是夜景模式，色彩还原准确，细节丰富。电池续航也不错，重度使用一天没问题。</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="user-info">
+                <img src="images/touxiang2.png" alt="用户头像" class="rounded-circle" style="width: 50px; height: 50px;">
+                <div class="ms-3">
+                  <h5 class="mb-0">李女士</h5>
+                  <div class="product-stars">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star-half-alt text-warning"></i>
+                  </div>
+                </div>
+              </div>
+              <span class="text-muted">2023-06-02</span>
+            </div>
+            <p class="mb-0">笔记本电脑性能强劲，运行大型软件毫无压力。屏幕素质也很好，色彩鲜艳，适合设计工作。唯一不足是有点重，便携性一般。</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="user-info">
+                <img src="images/touxiang3.png" alt="用户头像" class="rounded-circle" style="width: 50px; height: 50px;">
+                <div class="ms-3">
+                  <h5 class="mb-0">王先生</h5>
+                  <div class="product-stars">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star-o text-warning"></i>
+                  </div>
+                </div>
+              </div>
+              <span class="text-muted">2023-05-28</span>
+            </div>
+            <p class="mb-0">智能手表功能丰富，健康监测很准确，运动模式也很多。电池续航一般，基本每天都要充电。整体来说性价比不错。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- 页脚 -->
+  <footer class="footer py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4 fade-in">
+          <h4 class="footer-title">关于我们</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">公司简介</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">招贤纳士</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">联系我们</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">隐私政策</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.1s;">
+          <h4 class="footer-title">购物指南</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">注册流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">会员权益</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">购物流程</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">支付方式</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.2s;">
+          <h4 class="footer-title">售后服务</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white-50 hover:text-white">退换货政策</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">质量保证</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">物流查询</a></li>
+            <li><a href="#" class="text-white-50 hover:text-white">常见问题</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4 fade-in" style="transition-delay: 0.3s;">
+          <h4 class="footer-title">联系信息</h4>
+          <p class="text-white-50"><i class="fas fa-phone me-2"></i> +86 123456789</p>
+          <p class="text-white-50"><i class="fas fa-envelope me-2"></i> service@starshop.com</p>
+          <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i> 广州市天河区</p>
+          <div class="mt-4">
+            <h5>关注我们</h5>
+            <div class="d-flex mt-2">
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weixin fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white me-3 social-icon">
+                <i class="fab fa-weibo fa-2x"></i>
+              </a>
+              <a href="#" class="text-white-50 hover:text-white social-icon">
+                <i class="fab fa-tiktok fa-2x"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-white-20 mt-5 pt-5 text-center text-white-50 fade-in" style="transition-delay: 0.4s;">
+        <p>© 2025 星选易购 版权所有 | 粤ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+  <!-- 引入Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // 滚动渐入动画
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    });
+    
+    // 触摸事件处理 - 增加视觉反馈
+    document.addEventListener('touchstart', function(event) {
+      const target = event.target;
+      if (target.tagName === 'BUTTON' || target.classList.contains('btn')) {
+        target.style.transform = 'scale(0.95)';
+      }
+    });
+    
+    document.addEventListener('touchend', function(event) {
+      const target = event.target;
+      if (target.tagName === 'BUTTON' || target.classList.contains('btn')) {
+        target.style.transform = 'scale(1)';
+      }
+    });
+    
+    // 初始化滚动动画
+    window.dispatchEvent(new Event('scroll'));
+    
+  
+    
+    // 筛选功能
+    document.getElementById('filter-btn').addEventListener('click', function() {
+      alert('筛选功能已应用，实际项目中这里会根据用户选择筛选产品');
+    });
+    
+    // --------------------- 新增分页功能 ---------------------
+    document.addEventListener('DOMContentLoaded', function() {
+      // 模拟多页产品数据（实际项目中可从API获取）
+      const productPages = [
+        // 第1页：原有6个产品
+        [
+          {
+            img: "images/qijianshouji.png",
+            badge: "热销",
+            title: "旗舰智能手机",
+            desc: "最新款5G手机，性能强劲，拍照出色",
+            stars: 4.5,
+            reviews: 128,
+            price: "¥3,999"
+          },
+          {
+            img: "images/qingbaoji.png",
+            badge: "新品",
+            title: "轻薄智能手机",
+            desc: "高性能处理器，超长续航，轻薄设计",
+            stars: 5,
+            reviews: 87,
+            price: "¥2,999"
+          },
+          {
+            img: "images/qingbaoben.png",
+            badge: "热销",
+            title: "轻薄笔记本电脑",
+            desc: "商务办公首选，轻薄便携，续航持久",
+            stars: 4,
+            reviews: 65,
+            price: "¥5,999"
+          },
+          {
+            img: "images/youxiben.png",
+            badge: "新品",
+            title: "游戏笔记本电脑",
+            desc: "高性能显卡，144Hz高刷新率屏幕",
+            stars: 4.5,
+            reviews: 42,
+            price: "¥8,999"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "全能平板电脑",
+            desc: "学习办公娱乐多面手，轻薄便携",
+            stars: 5,
+            reviews: 93,
+            price: "¥3,299"
+          },
+          {
+            img: "images/dapingmuban.png",
+            badge: "新品",
+            title: "大屏平板电脑",
+            desc: "大屏幕，高清显示，适合观影和创作",
+            stars: 4,
+            reviews: 31,
+            price: "¥4,599"
+          }
+        ],
+        // 第2页：替换为其他类型产品
+        [
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "无线降噪耳机",
+            desc: "主动降噪，HiFi音质，长效续航",
+            stars: 4.8,
+            reviews: 245,
+            price: "¥1,299"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "智能音箱",
+            desc: "AI语音助手，360°环绕音效",
+            stars: 4.2,
+            reviews: 187,
+            price: "¥399"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "智能家居套装",
+            desc: "智能灯泡+插座+传感器组合",
+            stars: 4.7,
+            reviews: 156,
+            price: "¥899"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "4K运动相机",
+            desc: "防水防抖，8K视频拍摄",
+            stars: 4.3,
+            reviews: 92,
+            price: "¥2,599"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "便携充电宝",
+            desc: "20000mAh大容量，双向快充",
+            stars: 4.6,
+            reviews: 312,
+            price: "¥199"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "无线充电器",
+            desc: "15W快充，多设备兼容",
+            stars: 4.1,
+            reviews: 128,
+            price: "¥89"
+          }
+        ],
+        // 第3页：智能手表和其他设备
+        [
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "健康监测手表",
+            desc: "全天候健康监测，智能提醒，防水设计",
+            stars: 4.5,
+            reviews: 156,
+            price: "¥1,299"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "运动智能手表",
+            desc: "多种运动模式，长续航，专业数据分析",
+            stars: 4,
+            reviews: 78,
+            price: "¥1,899"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "智能手环",
+            desc: "心率监测，睡眠分析，14天续航",
+            stars: 4.7,
+            reviews: 289,
+            price: "¥159"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "AR眼镜",
+            desc: "增强现实体验，高清显示",
+            stars: 3.9,
+            reviews: 45,
+            price: "¥3,999"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "热销",
+            title: "电子书阅读器",
+            desc: "6英寸墨水屏，防水设计",
+            stars: 4.8,
+            reviews: 176,
+            price: "¥1,099"
+          },
+          {
+            img: "images/quannengban.png",
+            badge: "新品",
+            title: "便携蓝牙音箱",
+            desc: "360°音效，IPX7防水",
+            stars: 4.3,
+            reviews: 134,
+            price: "¥249"
+          }
+        ]
+      ];
+      
+      // 当前页码
+      let currentPage = 1;
+      // 当前排序方式
+      let currentSort = 'popular';
+      const productContainer = document.getElementById('product-container');
+      const pagination = document.getElementById('pagination');
+      const sortSelect = document.getElementById('sort-select');
+      
+      // 渲染产品列表
+      function renderProducts(page) {
+        productContainer.innerHTML = '';
+        const products = productPages[page - 1] || productPages[0];
+        
+        // 根据当前排序方式对产品进行排序
+        const sortedProducts = sortProducts(products, currentSort);
+        
+        sortedProducts.forEach((product, index) => {
+          const delay = index * 0.1; // 动画延迟
+          const card = document.createElement('div');
+          card.className = `col-md-6 col-lg-4 fade-in`;
+          card.style.animationDelay = `${delay}s`;
+          
+          card.innerHTML = `
+            <div class="product-card h-100">
+              <div class="position-relative overflow-hidden">
+                <img src="${product.img}" class="card-img-top" alt="${product.title}">
+                <span class="product-badge ${getBadgeClass(product.badge)} text-white">${product.badge}</span>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">${product.title}</h5>
+                <p class="card-text">${product.desc}</p>
+                <div class="product-stars">
+                  ${renderStars(product.stars)}
+                  <span class="text-muted ms-1">(${product.reviews})</span>
+                </div>
+              </div>
+              <div class="card-footer d-flex justify-content-between align-items-center">
+                <span class="product-price">${product.price}</span>
+                <button class="btn btn-primary">
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+              
+         
+            </div>
+          `;
+          
+          productContainer.appendChild(card);
+        });
+        
+        // 触发滚动动画
+        window.dispatchEvent(new Event('scroll'));
+      }
+      
+      // 根据排序方式对产品进行排序
+      function sortProducts(products, sortType) {
+        // 复制产品数组，避免修改原始数据
+        const sorted = [...products];
+        
+        switch(sortType) {
+          case 'popular':
+            // 按评论数量（人气）排序
+            return sorted.sort((a, b) => b.reviews - a.reviews);
+            
+          case 'newest':
+            // 按新品排序（这里简化处理，实际应该有日期字段）
+            return sorted.sort((a, b) => {
+              if (a.badge === '新品' && b.badge !== '新品') return -1;
+              if (a.badge !== '新品' && b.badge === '新品') return 1;
+              return 0;
+            });
+            
+          case 'price-low':
+            // 按价格从低到高排序
+            return sorted.sort((a, b) => {
+              const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+              const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+              return priceA - priceB;
+            });
+            
+          case 'price-high':
+            // 按价格从高到低排序
+            return sorted.sort((a, b) => {
+              const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+              const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+              return priceB - priceA;
+            });
+            
+          default:
+            return sorted;
+        }
+      }
+      
+      // 获取标签样式类
+      function getBadgeClass(badge) {
+        switch(badge) {
+          case "热销": return "bg-primary";
+          case "新品": return "bg-secondary";
+          case "限时特惠": return "bg-accent-color text-dark-color";
+          default: return "bg-primary";
+        }
+      }
+      
+      // 渲染星级评分
+      function renderStars(rating) {
+        let starsHTML = '';
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        
+        // 全星
+        for (let i = 0; i < fullStars; i++) {
+          starsHTML += '<i class="fas fa-star text-warning"></i>';
+        }
+        
+        // 半星
+        if (hasHalfStar) {
+          starsHTML += '<i class="fas fa-star-half-alt text-warning"></i>';
+        }
+        
+        // 空星
+        for (let i = 0; i < 5 - fullStars - (hasHalfStar ? 1 : 0); i++) {
+          starsHTML += '<i class="fas fa-star-o text-warning"></i>';
+        }
+        
+        return starsHTML;
+      }
+      
+      // 更新分页按钮状态
+      function updatePagination() {
+        // 获取所有页码按钮
+        const pageItems = pagination.querySelectorAll('.page-item');
+        
+        // 清除所有按钮的active类
+        pageItems.forEach(item => {
+          item.classList.remove('active');
+        });
+        
+        // 设置当前页码按钮为active
+        const currentItem = pageItems[currentPage];
+        if (currentItem) {
+          currentItem.classList.add('active');
+        }
+        
+        // 禁用/启用前后按钮
+        const prevBtn = pageItems[0];
+        const nextBtn = pageItems[pageItems.length - 1];
+        prevBtn.classList.toggle('disabled', currentPage === 1);
+        nextBtn.classList.toggle('disabled', currentPage === productPages.length);
+      }
+      
+      // 绑定分页按钮事件
+      function bindPaginationEvents() {
+        // 使用事件委托处理所有分页按钮点击
+        pagination.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const target = e.target.closest('.page-item');
+          if (!target || target.classList.contains('disabled')) return;
+          
+          const link = target.querySelector('a');
+          const pageText = link.textContent.trim();
+          
+          if (pageText === '«') {
+            currentPage = Math.max(1, currentPage - 1);
+          } else if (pageText === '»') {
+            currentPage = Math.min(productPages.length, currentPage + 1);
+          } else {
+            // 从链接文本获取页码
+            const pageNum = parseInt(pageText);
+            if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= productPages.length) {
+              currentPage = pageNum;
+            }
+          }
+          
+          renderProducts(currentPage);
+          updatePagination();
+        });
+      }
+      
+      // 绑定排序选择器事件
+      function bindSortEvents() {
+        sortSelect.addEventListener('change', function() {
+          currentSort = this.value;
+          renderProducts(currentPage);
+        });
+      }
+      
+      // 初始化页面
+      renderProducts(currentPage);
+      updatePagination();
+      bindPaginationEvents();
+      bindSortEvents();
+    });
+	   // 添加平滑滚动效果
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          // 考虑到固定导航栏的高度，需要稍微调整滚动位置
+          const navbarHeight = document.querySelector('.navbar').offsetHeight;
+          const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
